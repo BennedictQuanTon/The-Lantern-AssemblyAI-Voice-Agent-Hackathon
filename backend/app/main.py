@@ -17,7 +17,9 @@ from .domain.restaurant.workflow import OrderWorkflow
 from .services.kitchen_events import KitchenEventBroker
 from .services.realtime_session import RealtimeSession
 from .providers.asr.assemblyai_stream import CONNECT_BUDGET_S, AssemblyAIRealtimeProvider, TranscriptEvent
+from .providers.llm.gemini import GeminiClient
 from .providers.llm.ollama import OllamaClient
+from .providers.tts.cartesia import CartesiaProvider
 from .providers.tts.kokoro import KokoroProvider
 
 app = FastAPI(title="The Lantern — Multilingual Voice Service")
@@ -25,8 +27,30 @@ store = get_lantern_store()
 repository = SQLiteOrderRepository(settings.database_path)
 workflow = OrderWorkflow(repository, store)
 broker = KitchenEventBroker()
-llm = OllamaClient(settings.ollama_base_url, settings.ollama_model, settings.ollama_thinking) if settings.llm_provider == "ollama" else None
-tts = KokoroProvider(settings.kokoro_model_id, settings.kokoro_device)
+def _llm_name() -> str:
+    return settings.gemini_model if settings.llm_provider == "gemini" else settings.ollama_model
+
+
+def _tts_name() -> str:
+    return settings.cartesia_model if settings.tts_provider == "cartesia" else settings.kokoro_model_id
+
+
+def _build_llm():
+    if settings.llm_provider == "gemini":
+        return GeminiClient(settings.gemini_api_key, settings.gemini_model)
+    if settings.llm_provider == "ollama":
+        return OllamaClient(settings.ollama_base_url, settings.ollama_model, settings.ollama_thinking)
+    return None
+
+
+def _build_tts():
+    if settings.tts_provider == "cartesia":
+        return CartesiaProvider(settings.cartesia_api_key, settings.cartesia_voice_id, settings.cartesia_model)
+    return KokoroProvider(settings.kokoro_model_id, settings.kokoro_device)
+
+
+llm = _build_llm()
+tts = _build_tts()
 provider_state = {"llm_warm": False, "tts_warm": False, "llm_error": None, "tts_error": None}
 
 
@@ -38,12 +62,14 @@ async def warm_local_providers() -> None:
             provider_state["llm_warm"] = True
         except Exception as exc:  # noqa: BLE001
             provider_state["llm_error"] = str(exc)
-    if settings.tts_provider == "kokoro":
-        try:
+    try:
+        if settings.tts_provider == "kokoro":
             await asyncio.to_thread(tts.warmup, "en")
-            provider_state["tts_warm"] = True
-        except Exception as exc:  # noqa: BLE001
-            provider_state["tts_error"] = str(exc)
+        else:
+            await tts.warmup("en")
+        provider_state["tts_warm"] = True
+    except Exception as exc:  # noqa: BLE001
+        provider_state["tts_error"] = str(exc)
 
 
 @app.on_event("shutdown")
@@ -72,7 +98,7 @@ def health():
 def ready():
     return {
         "ready": bool(provider_state["llm_warm"] and provider_state["tts_warm"] and settings.assemblyai_api_key),
-        "providers": {"asr": settings.assemblyai_speech_model, "llm": settings.ollama_model, "tts": settings.kokoro_model_id},
+        "providers": {"asr": settings.assemblyai_speech_model, "llm": _llm_name(), "tts": _tts_name()},
         "provider_state": provider_state,
         "tts_device": tts.resolved_device,
     }
@@ -304,7 +330,7 @@ async def realtime(websocket: WebSocket):
 
         asr_connect_task = asyncio.create_task(connect_asr())
     guest_events_task = asyncio.create_task(deliver_kitchen_events())
-    await send({"type": "session_ready", "table_id": table_id, "order": workflow.describe_order(resumed) if resumed else None, "providers": {"asr": settings.assemblyai_speech_model, "llm": settings.ollama_model, "tts": settings.kokoro_model_id}, "provider_state": provider_state, "asr_status": "connecting" if asr else "unavailable", "has_tts": provider_state["tts_warm"], "has_cartesia": False})
+    await send({"type": "session_ready", "table_id": table_id, "order": workflow.describe_order(resumed) if resumed else None, "providers": {"asr": settings.assemblyai_speech_model, "llm": _llm_name(), "tts": _tts_name()}, "provider_state": provider_state, "asr_status": "connecting" if asr else "unavailable", "has_tts": provider_state["tts_warm"], "has_cartesia": settings.tts_provider == "cartesia"})
     try:
         while True:
             message = await websocket.receive()

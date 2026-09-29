@@ -9,6 +9,49 @@ from ...domain.restaurant.models import IntentProposal
 INTENT_SCHEMA = {**IntentProposal.model_json_schema(), "required": ["action", "ref", "items"]}
 
 
+def build_intent_prompt(transcript: str, context: dict) -> str:
+    menu = OllamaClient._compact_menu(context.get("menu", []))
+    hints = OllamaClient._entity_hints(transcript, menu)
+    current = context.get("current_state") or {}
+    return (
+        "Extract one restaurant action as schema-valid JSON. "
+        "Use menu SKUs and allowed modifiers exactly; ENTITY_HINTS are deterministic matches. "
+        "For a new/additional dish, emit create_or_update_order with only the requested NEW items, not the full basket. "
+        "For dishes the waiter just offered (STATE.last_offered), such as 'those two' or 'the first one', emit create_or_update_order with ref offered_all, offered_first or offered_second and no items. "
+        "When STATE.pending shows a refused dish, 'X instead' means create_or_update_order with item X and ref pending. "
+        "Only when the guest names both dishes, 'X instead of Y', emit replace_item with one new item X and replaces_sku=Y. "
+        "For a removal, emit remove_item with the SKU from STATE.items. "
+        "When the guest is finished or asks to place, send or confirm the order, emit place_order with no items. "
+        "For cancellation, emit cancel_order with no items. "
+        "For yes or no to the waiter's question in STATE.pending, emit confirm or decline with no items. "
+        "When the guest asks what you recommend or suggest, emit recommend with no items. "
+        "For other questions about the menu or a dish, emit menu_query with no items. "
+        "Otherwise set ref to none. "
+        "If a known menu item is sold out, still return its SKU so deterministic code can explain and suggest an alternative. "
+        "Unknown dishes or unsupported modifiers require clarify with no items. "
+        "Set source_language to USER's language. Do not explain outside the JSON fields.\n"
+        f"ENTITY_HINTS={json.dumps(hints, ensure_ascii=False, separators=(',', ':'))}\n"
+        f"MENU={json.dumps(menu, ensure_ascii=False, separators=(',', ':'))}\n"
+        f"STATE={json.dumps(current, ensure_ascii=False, separators=(',', ':'))}\n"
+        f"USER={transcript}"
+    )
+
+
+def proposal_from_raw(raw: str, transcript: str) -> IntentProposal:
+    try:
+        intent = IntentProposal.model_validate_json(raw)
+    except Exception:
+        start, end = raw.find("{"), raw.rfind("}")
+        if start >= 0 and end > start:
+            intent = IntentProposal.model_validate_json(raw[start:end + 1])
+        else:
+            raise ValueError("model returned malformed intent JSON")
+    script_language = OllamaClient._script_language(transcript)
+    if script_language:
+        intent = intent.model_copy(update={"source_language": script_language})
+    return intent
+
+
 class OllamaClient:
     def __init__(
         self,
@@ -79,44 +122,8 @@ class OllamaClient:
         )
 
     async def extract_intent(self, transcript: str, context: dict) -> IntentProposal:
-        menu = self._compact_menu(context.get("menu", []))
-        hints = self._entity_hints(transcript, menu)
-        current = context.get("current_state") or {}
-        prompt = (
-            "Extract one restaurant action as schema-valid JSON. "
-            "Use menu SKUs and allowed modifiers exactly; ENTITY_HINTS are deterministic matches. "
-            "For a new/additional dish, emit create_or_update_order with only the requested NEW items, not the full basket. "
-            "For dishes the waiter just offered (STATE.last_offered), such as 'those two' or 'the first one', emit create_or_update_order with ref offered_all, offered_first or offered_second and no items. "
-            "When STATE.pending shows a refused dish, 'X instead' means create_or_update_order with item X and ref pending. "
-            "Only when the guest names both dishes, 'X instead of Y', emit replace_item with one new item X and replaces_sku=Y. "
-            "For a removal, emit remove_item with the SKU from STATE.items. "
-            "When the guest is finished or asks to place, send or confirm the order, emit place_order with no items. "
-            "For cancellation, emit cancel_order with no items. "
-            "For yes or no to the waiter's question in STATE.pending, emit confirm or decline with no items. "
-            "When the guest asks what you recommend or suggest, emit recommend with no items. "
-            "For other questions about the menu or a dish, emit menu_query with no items. "
-            "Otherwise set ref to none. "
-            "If a known menu item is sold out, still return its SKU so deterministic code can explain and suggest an alternative. "
-            "Unknown dishes or unsupported modifiers require clarify with no items. "
-            "Set source_language to USER's language. Do not explain outside the JSON fields.\n"
-            f"ENTITY_HINTS={json.dumps(hints, ensure_ascii=False, separators=(',', ':'))}\n"
-            f"MENU={json.dumps(menu, ensure_ascii=False, separators=(',', ':'))}\n"
-            f"STATE={json.dumps(current, ensure_ascii=False, separators=(',', ':'))}\n"
-            f"USER={transcript}"
-        )
-        raw, _ = await self._chat(prompt, schema=INTENT_SCHEMA, max_tokens=224)
-        try:
-            intent = IntentProposal.model_validate_json(raw)
-        except Exception:
-            start, end = raw.find("{"), raw.rfind("}")
-            if start >= 0 and end > start:
-                intent = IntentProposal.model_validate_json(raw[start:end + 1])
-            else:
-                raise ValueError("Ollama returned malformed intent JSON")
-        script_language = self._script_language(transcript)
-        if script_language:
-            intent = intent.model_copy(update={"source_language": script_language})
-        return intent
+        raw, _ = await self._chat(build_intent_prompt(transcript, context), schema=INTENT_SCHEMA, max_tokens=224)
+        return proposal_from_raw(raw, transcript)
 
     async def localize_verified_response(self, facts: dict, language: str) -> str:
         schema = {"type": "object", "properties": {"text": {"type": "string"}}, "required": ["text"]}

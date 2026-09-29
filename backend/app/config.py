@@ -18,9 +18,14 @@ class Settings:
     ollama_model: str = os.getenv("OLLAMA_MODEL", "qwen3:4b")
     ollama_base_url: str = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     ollama_thinking: bool = os.getenv("OLLAMA_THINKING", "false").lower() == "true"
+    gemini_api_key: str = os.getenv("GEMINI_API_KEY", "")
+    gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
     tts_provider: str = os.getenv("TTS_PROVIDER", "kokoro")
     kokoro_model_id: str = os.getenv("KOKORO_MODEL_ID", "hexgrad/Kokoro-82M")
     kokoro_device: str = os.getenv("KOKORO_DEVICE", "auto")
+    cartesia_api_key: str = os.getenv("CARTESIA_API_KEY", "")
+    cartesia_voice_id: str = os.getenv("CARTESIA_VOICE_ID", "")
+    cartesia_model: str = os.getenv("CARTESIA_MODEL", "sonic-3")
     database_path: Path = Path(os.getenv("DATABASE_PATH", "var/lantern.sqlite3"))
     metrics_dir: Path = Path(os.getenv("METRICS_DIR", "var/metrics"))
 
