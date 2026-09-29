@@ -89,7 +89,7 @@ class GeminiClient:
         await self._generate(
             'Return {"ready":true}.',
             {"type": "object", "properties": {"ready": {"type": "boolean"}}, "required": ["ready"]},
-            16,
+            128,
         )
 
     async def extract_intent(self, transcript: str, context: dict) -> IntentProposal:

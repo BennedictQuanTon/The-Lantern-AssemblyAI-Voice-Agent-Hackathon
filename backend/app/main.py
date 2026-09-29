@@ -4,9 +4,11 @@ import asyncio
 import base64
 import json
 import time
+from pathlib import Path
 from typing import Literal
 
 from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .config import settings
@@ -374,3 +376,8 @@ async def operations(websocket: WebSocket):
         pass
     finally:
         broker.unsubscribe(queue)
+
+
+_frontend = Path(__file__).resolve().parents[2] / "frontend" / "dist"
+if _frontend.exists():
+    app.mount("/", StaticFiles(directory=_frontend, html=True), name="frontend")

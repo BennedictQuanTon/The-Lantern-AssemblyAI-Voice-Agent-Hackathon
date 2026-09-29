@@ -4,6 +4,7 @@ import json
 import httpx
 from ...domain.restaurant.mentions import mentioned_skus
 from ...domain.restaurant.models import IntentProposal
+from ...services.language_router import normalize_language
 
 # Required so the model always commits to an action and a reference before listing items.
 INTENT_SCHEMA = {**IntentProposal.model_json_schema(), "required": ["action", "ref", "items"]}
@@ -47,9 +48,8 @@ def proposal_from_raw(raw: str, transcript: str) -> IntentProposal:
         else:
             raise ValueError("model returned malformed intent JSON")
     script_language = OllamaClient._script_language(transcript)
-    if script_language:
-        intent = intent.model_copy(update={"source_language": script_language})
-    return intent
+    language = script_language or normalize_language(intent.source_language)
+    return intent.model_copy(update={"source_language": language})
 
 
 class OllamaClient:

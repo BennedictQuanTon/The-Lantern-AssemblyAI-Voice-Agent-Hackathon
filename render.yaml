@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: lantern
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: TTS_PROVIDER
+        value: cartesia
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: CARTESIA_MODEL
+        value: sonic-3
+      - key: ASSEMBLYAI_SPEECH_MODEL
+        value: universal-3-5-pro
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+      - key: ASSEMBLYAI_API_KEY
+        sync: false

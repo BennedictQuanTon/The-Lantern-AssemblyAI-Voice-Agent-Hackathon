@@ -68,9 +68,10 @@ async def main() -> None:
                 "total": result.get("total"),
                 "placed": bool(result.get("placed")) or result.get("status") == "pending_kitchen",
                 "basket": [line.get("name") for line in result.get("basket") or []],
+                "voice": bool(result.get("tts_supported")),
             })
             print(f"{result.get('pipeline_ms'):>7} ms | {text}")
-            print(f"         {result.get('status')} | {result.get('response_text')}")
+            print(f"         {result.get('status')} | lang={result.get('language_code')} voice={result.get('tts_supported')} | {result.get('response_text')}")
         reply = rows[-1]["reply"] or "Your order is in."
         started = time.perf_counter()
         first = None
@@ -87,7 +88,7 @@ async def main() -> None:
 
     final = rows[-1]
     names = set(final["basket"])
-    ok = names == EXPECTED_NAMES and final["total"] == EXPECTED_TOTAL and final["placed"]
+    ok = names == EXPECTED_NAMES and final["total"] == EXPECTED_TOTAL and final["placed"] and all(row["voice"] for row in rows)
     print(f"final_basket={final['basket']} total={final['total']} placed={final['placed']}")
     print("SIX_TURN", "PASS" if ok else "FAIL")
 
