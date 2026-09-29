@@ -1,5 +1,7 @@
 # Benchmarking
 
+For quantity changes, order readback, removal, swaps, resume, cancellation, and transcript-to-response timing, use the [order-edit regression runner](order-edit-regressions.md).
+
 ## New-architecture benchmark
 
 The dedicated runner measures the implemented strengths of the active Lantern architecture: canonical validation, original-script persistence, SQLite restart recovery, monotonic and immutable revisions, stale kitchen-write rejection, multilingual Kokoro routing, and caption-only fallback. It also includes readiness and allergen-safety probes so an incomplete live stack cannot be presented as a successful end-to-end result.

@@ -11,6 +11,7 @@ from ..domain.restaurant.workflow import OrderWorkflow
 from ..providers.llm.ollama import OllamaClient
 from .dialogue import CLOSED_STATUSES, DialogueState, resolve
 from .language_router import resolve_language
+from .order_requests import explicit_order_request
 from .response_renderer import SKU_PATTERN, render_clarification, render_kitchen_decision, render_order_response, render_prompt
 
 
@@ -121,7 +122,8 @@ class RealtimeSession:
         started = time.perf_counter()
         current = self.current_order()
         self.dialogue.begin_turn()
-        if self.llm:
+        intent = explicit_order_request(transcript, current, self.workflow.store, language)
+        if intent is None and self.llm:
             intent = await self.llm.extract_intent(transcript, {
                 "menu": [item.as_dict() for item in self.workflow.store.list_menu()],
                 "current_state": {
@@ -133,7 +135,7 @@ class RealtimeSession:
                     **self.dialogue.to_prompt(self.workflow.store),
                 },
             })
-        else:
+        elif intent is None:
             intent = IntentProposal(source_language=language, action="clarify", needs_clarification=True, clarification_question="Please confirm your order.")
         intent = self._heard_modifiers_only(intent, transcript)
         resolved, supported = resolve_language(self._reply_language(intent.source_language, language))
@@ -171,8 +173,8 @@ class RealtimeSession:
             result = self.workflow.submit(self.table_id, self.session_id, transcript, submitted, self.order_id)
             if result.get("order_id"):
                 self.order_id = result["order_id"]
-                wrote_revision = True
-                if submitted.action in {"create_or_update_order", "replace_item"}:
+                wrote_revision = not result.get("unchanged", False)
+                if wrote_revision and submitted.action in {"create_or_update_order", "set_quantity", "replace_item"}:
                     self.dialogue.last_added = [item.sku for item in submitted.items]
                     if self.dialogue.last_refused in self.dialogue.last_added:
                         self.dialogue.last_refused = None  # back in stock and ordered after all

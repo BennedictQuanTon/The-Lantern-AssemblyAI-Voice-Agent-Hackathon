@@ -54,6 +54,8 @@ PROMPTS = {
     "anything_else": ("Claro. ¿Qué más desea?", "Sure. What else would you like?"),
     "which_offered": ("¿Qué platos desea?", "Which dishes would you like?"),
     "which_swap": ("¿Qué plato de su pedido cambio?", "Which dish in your order should I swap out?"),
+    "which_quantity": ("¿De qué plato de su pedido cambio la cantidad?", "Which dish in your order should I change the quantity of?"),
+    "quantity_range": ("Elija una cantidad de 1 a 50, o pídame que quite el plato.", "Please choose a quantity from 1 to 50, or ask me to remove the dish."),
     "nothing_pending": ("Perdón, ¿qué desea hacer?", "Sorry, what would you like to do?"),
     "no_order": ("Su pedido está vacío. ¿Qué desea?", "There's nothing in your order yet. What would you like?"),
     "clarify": ("¿Puede aclarar su pedido?", "Please clarify your order."),
@@ -92,6 +94,8 @@ def _safe_error(error: str, names: dict[str, str], es: bool) -> str:
         return "Ese pedido ya está cerrado. ¿Qué desea pedir?" if es else "That order is closed. What would you like to order?"
     if error == "the replacement is identical to the current item":
         return "Eso ya está en su pedido." if es else "That's already in your order."
+    if error == "please choose which version of the dish to change":
+        return "¿Qué versión del plato desea cambiar?" if es else "Which version of the dish should I change?"
     if "substitute" in error:
         return ("No tengo un sustituto pendiente. ¿Qué desea?" if es
                 else "I don't have a substitute waiting. What would you like?")
