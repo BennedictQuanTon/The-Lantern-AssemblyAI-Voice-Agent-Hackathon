@@ -17,6 +17,8 @@ def gemini_intent_schema() -> dict:
             "source_language": {"type": "string"},
             "action": {"type": "string", "enum": list(get_args(Action))},
             "ref": {"type": "string", "enum": list(get_args(Ref))},
+            "replaces_sku": {"type": "string"},
+            "clarification_question": {"type": "string"},
             "items": {
                 "type": "array",
                 "items": {
