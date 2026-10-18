@@ -1,0 +1,14 @@
+# Vercel hosts only the static site (landing/ + the app built from frontend/).
+# The Python backend runs on Render; keep it out so Vercel doesn't install or detect it.
+backend/
+legacy/
+eval/
+tests/
+reports/
+tools/
+data/
+var/
+requirements*.txt
+pyproject.toml
+Dockerfile
+render.yaml
