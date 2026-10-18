@@ -58,8 +58,13 @@ sentence-transformers/
 
 # Large source design assets are kept under design/source/ when intentionally versioned.
 
-# Large video masters stay local (GitHub rejects files over 100 MB). The web cut lives in
-# landing/public/media/ and is tracked.
+# Local media: video masters, raw photos and exports stay out of git (GitHub rejects files over
+# 100 MB). Keep them in _media/. The web cut of the teaser lives in landing/public/media/.
+/_media/
 /*.mp4
 /*.mov
 /*.webm
+*.heic
+*.HEIC
+/*.jpg
+/*.jpeg

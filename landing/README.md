@@ -66,7 +66,7 @@ app shows the message; staff writes get HTTP 429. Counts live in memory (single 
 - `public/media/lantern-teaser-1080p.mp4`: the official teaser for the web (1080p H.264 + AAC,
   ~34 MB, `faststart`), with the "The Latern" title typo corrected to "The Lantern" in the intro
   (≈11–14 s) and the outro (≈183–185 s). The corrected 4K master is
-  `The Lantern_Teaser_Official_fixed.mp4` at the repo root, kept out of git.
+  `_media/The Lantern_Teaser_Official_fixed.mp4`, kept out of git.
 - `public/audio/demo/*.mp3`: feature-demo audio from `scripts/generate_demo_audio.py`
   (`.venv/bin/python landing/scripts/generate_demo_audio.py`). The waiter uses the product's Kokoro
   voices and says the replies verbatim; the "one moment" clips are the app's real fillers.

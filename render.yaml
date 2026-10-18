@@ -21,9 +21,10 @@ services:
         sync: false
       - key: ASSEMBLYAI_API_KEY
         sync: false
-      # Public demo limits (backend/app/services/rate_limit.py)
+      # Public demo limits (backend/app/services/rate_limit.py). Off while judging is in progress so
+      # the submitted link is never throttled; flip to "true" afterwards to protect the API budget.
       - key: RATE_LIMIT_ENABLED
-        value: "true"
+        value: "false"
       - key: DEMO_SESSIONS_PER_IP_PER_DAY
         value: "8"
       - key: DEMO_TURNS_PER_IP_PER_DAY
