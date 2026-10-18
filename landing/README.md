@@ -1,27 +1,56 @@
 # The Lantern · Landing Page
 
 Static landing page for The Lantern (Vite + TypeScript, no framework, same stack as `frontend/`).
-Colors and fonts come from the app's design tokens (`src/styles/tokens.css` is a copy of
-`frontend/src/styles/tokens.css`; keep the two in sync).
+It imports the app's own `tokens.css`, `components.css` and orb (`siri_orb.ts`) from `../frontend`,
+so colors, fonts and the feature demos stay identical to the app.
 
 ```bash
 cd landing
 npm ci
 npm run dev       # http://localhost:5174
-npm run build     # outputs dist/
+npm run build     # outputs dist/ (index.html + demo.html)
 ```
+
+## Pages
+
+- `/`: the landing page.
+- `/demo`: the wake-up page. Every "Try the Demo" button goes here. It polls the live app's
+  `GET /ready` while the Render instance boots, shows the real start-up steps (server, AssemblyAI,
+  model, voice), then opens the app at `/?table_id=T4`.
 
 ## Deploy
 
-- **Landing → Vercel.** Import the repo, set **Root Directory** to `landing`. `vercel.json` sets the
-  Vite build. Add the environment variable `VITE_APP_URL` with the Render URL of the live app.
-- **Live app → Render.** The root `Dockerfile` + `render.yaml` serve the backend and the app.
-  Every "Try the Demo" button links to `VITE_APP_URL` (default `https://lantern.onrender.com`).
+- **Landing → Vercel.** Import the repo and set **Root Directory** to `landing`. Keep
+  "Include files outside the Root Directory" on (the default): the build reads `../frontend`.
+  Set `VITE_APP_URL` to the Render URL of the live app.
+- **Live app → Render.** The root `Dockerfile` + `render.yaml`. `render.yaml` turns on the public
+  demo limits and CORS for GET requests; set `CORS_ALLOW_ORIGINS` to the Vercel URL to lock it down.
+
+## Public demo limits (backend)
+
+`backend/app/services/rate_limit.py`, enabled with `RATE_LIMIT_ENABLED=true` (off locally):
+
+| Limit | Default | Env |
+|---|---|---|
+| Voice sessions per IP per day | 8 | `DEMO_SESSIONS_PER_IP_PER_DAY` |
+| Guest turns per IP per day | 80 | `DEMO_TURNS_PER_IP_PER_DAY` |
+| Guest turns per day, all visitors | 2,000 | `DEMO_TURNS_PER_DAY` |
+| Sessions open at once | 4 | `DEMO_MAX_CONCURRENT_SESSIONS` |
+| Session length | 300 s | `DEMO_MAX_SESSION_SECONDS` |
+| Turns per session | 30 | `DEMO_MAX_TURNS_PER_SESSION` |
+| Staff writes per IP per minute | 30 | `DEMO_WRITES_PER_IP_PER_MINUTE` |
+| Typed request length | 280 chars | `DEMO_MAX_TRANSCRIPT_CHARS` |
+
+Days reset at UTC midnight. Over a limit, the socket gets `{"type": "rate_limited", ...}` and the
+app shows the message; staff writes get HTTP 429. Counts live in memory (single instance).
 
 ## Media
 
-- `public/media/lantern-teaser-1080p.mp4`: the official teaser re-encoded for the web
-  (1080p H.264 + AAC, ~34 MB, `faststart`). The 4K master stays out of git.
-- `public/media/lantern-teaser-poster.jpg`: the team's cover image, used as poster and OG image.
+- `public/media/lantern-teaser-1080p.mp4`: the official teaser for the web (1080p H.264 + AAC,
+  ~34 MB, `faststart`). The 4K master stays out of git.
+- `public/audio/demo/*.mp3`: feature-demo audio from `scripts/generate_demo_audio.py`
+  (`.venv/bin/python landing/scripts/generate_demo_audio.py`). The waiter uses the product's Kokoro
+  voices and says the replies verbatim; the "one moment" clips are the app's real fillers.
+- `public/shots/dining-welcome.jpg`: the app's Dining welcome screen (hero).
 - `public/team/*`: portraits cropped from the presentation's "Our Team" slide.
-- `public/shots/*`: the app's Dining, Management and Logs screenshots (`docs/assets/`).
+- `public/logos/*`: official AssemblyAI, lablab.ai and NativelyAI marks, from their own sites.

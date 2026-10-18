@@ -29,8 +29,8 @@ export class AppleOrb {
 
   private updateSize(): void {
     const dpr = window.devicePixelRatio || 1;
-    const rect = this.canvas.getBoundingClientRect();
-    this.size = Math.round(rect.width) || 260;
+    // Layout size, not the on-screen box: a CSS-scaled preview (the landing page) keeps the app's geometry.
+    this.size = this.canvas.offsetWidth || 260;
     this.canvas.width = Math.round(this.size * dpr);
     this.canvas.height = Math.round(this.size * dpr);
     this.ctx.setTransform(1, 0, 0, 1, 0, 0);

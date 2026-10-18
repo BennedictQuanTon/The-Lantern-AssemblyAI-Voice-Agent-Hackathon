@@ -157,4 +157,5 @@ export type V2ServerMessage =
   | { type: "audio_chunk"; pcm_b64: string; sample_rate: number; ttfb_ms?: number | null }
   | { type: "turn_complete"; pipeline_ms?: number | null; voice_ttfb_ms?: number | null }
   | { type: "barge_in"; reason?: string }
+  | { type: "rate_limited"; scope: string; message: string; retry_after_s: number }
   | { type: "error"; message?: string };

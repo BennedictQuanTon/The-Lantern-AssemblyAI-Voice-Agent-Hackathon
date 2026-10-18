@@ -21,3 +21,21 @@ services:
         sync: false
       - key: ASSEMBLYAI_API_KEY
         sync: false
+      # Public demo limits (backend/app/services/rate_limit.py)
+      - key: RATE_LIMIT_ENABLED
+        value: "true"
+      - key: DEMO_SESSIONS_PER_IP_PER_DAY
+        value: "8"
+      - key: DEMO_TURNS_PER_IP_PER_DAY
+        value: "80"
+      - key: DEMO_TURNS_PER_DAY
+        value: "2000"
+      - key: DEMO_MAX_CONCURRENT_SESSIONS
+        value: "4"
+      - key: DEMO_MAX_SESSION_SECONDS
+        value: "300"
+      - key: DEMO_MAX_TURNS_PER_SESSION
+        value: "30"
+      # Set to the landing page's Vercel URL to restrict who can read /ready cross-origin.
+      - key: CORS_ALLOW_ORIGINS
+        value: "*"

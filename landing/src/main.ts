@@ -1,13 +1,13 @@
 /**
- * The Lantern landing page: scroll reveals, count-ups, the hero orb, the problem slider,
- * the product view switcher and the teaser player. No framework, same stack as the app.
+ * The Lantern landing page: scroll reveals, count-ups, the hero orb, the teaser player,
+ * the deployment switch in How It Works, the turn-detection waveform and the feature demos.
+ * No framework, same stack as the app.
  */
 
-import "./styles/tokens.css";
+import "../../frontend/src/styles/tokens.css";
+import "../../frontend/src/styles/components.css";
 import "./styles/landing.css";
-
-// The live app is the Docker service on Render (render.yaml); set VITE_APP_URL on Vercel.
-const APP_URL = import.meta.env.VITE_APP_URL?.trim() || "https://lantern.onrender.com";
+import { initShowcase } from "./showcase";
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = <T extends Element>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
@@ -23,13 +23,6 @@ function onceInView(el: Element, fn: () => void, options: IntersectionObserverIn
     }
   }, options);
   io.observe(el);
-}
-
-// ---------- Demo links ----------
-for (const a of $$<HTMLAnchorElement>("[data-app-link]")) {
-  a.href = APP_URL;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
 }
 
 // ---------- Navigation ----------
@@ -70,7 +63,7 @@ function initNav(): void {
 
 // ---------- Reveals, masked headings, count-ups ----------
 function initReveals(): void {
-  for (const el of $$<HTMLElement>(".l-reveal, .l-reveal-scale, .l-mask-heading, [data-viz], .l-member")) {
+  for (const el of $$<HTMLElement>(".l-reveal, .l-reveal-scale, .l-mask-heading, [data-viz], .l-member, .aai")) {
     if (el.classList.contains("is-in")) continue;
     const immediate = el.hasAttribute("data-immediate");
     onceInView(el, () => el.classList.add("is-in"), immediate ? { threshold: 0 } : undefined);
@@ -88,8 +81,7 @@ function countUp(el: HTMLElement): void {
   const t0 = performance.now();
   const tick = (t: number) => {
     const p = Math.min(1, (t - t0) / duration);
-    const eased = 1 - Math.pow(1 - p, 4);
-    render(from + (target - from) * eased);
+    render(from + (target - from) * (1 - Math.pow(1 - p, 4)));
     if (p < 1) requestAnimationFrame(tick);
   };
   render(from);
@@ -97,11 +89,7 @@ function countUp(el: HTMLElement): void {
 }
 
 function initCounters(): void {
-  // Counters inside the slider run when their slide becomes active instead.
-  for (const el of $$<HTMLElement>("[data-count]")) {
-    if (el.closest(".l-slide")) continue;
-    onceInView(el, () => countUp(el), { threshold: 0.6 });
-  }
+  for (const el of $$<HTMLElement>("[data-count]")) onceInView(el, () => countUp(el), { threshold: 0.6 });
 }
 
 // ---------- Hero orb: listening → understanding → speaking ----------
@@ -137,166 +125,8 @@ function initOrb(): void {
   }, 1900);
 }
 
-// ---------- Problem slider ----------
-function initSlider(): void {
-  const root = $<HTMLElement>("#problemSlider");
-  if (!root) return;
-  const track = $<HTMLElement>(".l-slider-track", root)!;
-  const slides = $$<HTMLElement>(".l-slide", root);
-  const dots = $$<HTMLButtonElement>(".l-dot", root);
-  const [prev, next] = $$<HTMLButtonElement>(".l-arrow", root);
-  const counted = new Set<HTMLElement>();
-  let index = 0;
-  let visible = false;
-
-  // Build the slide visuals: 62 of 100 dots, 7 of 10 guests leaving.
-  for (const grid of $$<HTMLElement>(".l-viz-dots", root)) {
-    const filled = Number(grid.dataset.filled ?? 0);
-    for (let n = 0; n < 100; n++) {
-      const dot = document.createElement("span");
-      if (n < filled) dot.className = "on";
-      dot.style.setProperty("--t", `${n * 8}ms`);
-      grid.appendChild(dot);
-    }
-  }
-  $$<HTMLElement>(".l-viz-guests span", root).forEach((g, n) => {
-    if (n < 7) g.classList.add("gone");
-    g.style.setProperty("--t", `${200 + n * 90}ms`);
-  });
-
-  const activate = () => {
-    slides.forEach((s, n) => {
-      const on = visible && n === index;
-      s.classList.toggle("is-active", on);
-      s.setAttribute("aria-hidden", String(n !== index));
-      if (on) {
-        for (const c of $$<HTMLElement>("[data-count]", s)) {
-          if (counted.has(c)) continue;
-          counted.add(c);
-          countUp(c);
-        }
-      }
-    });
-  };
-
-  const go = (n: number) => {
-    index = Math.max(0, Math.min(slides.length - 1, n));
-    track.style.setProperty("--i", String(index));
-    dots.forEach((d, k) => (k === index ? d.setAttribute("aria-current", "true") : d.removeAttribute("aria-current")));
-    prev.disabled = index === 0;
-    next.disabled = index === slides.length - 1;
-    activate();
-  };
-
-  dots.forEach((d, k) => d.addEventListener("click", () => go(k)));
-  prev.addEventListener("click", () => go(index - 1));
-  next.addEventListener("click", () => go(index + 1));
-  slides.forEach((s, k) => s.addEventListener("click", () => k !== index && go(k)));
-  root.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowRight") go(index + 1);
-    if (e.key === "ArrowLeft") go(index - 1);
-  });
-
-  // Touch swipe
-  let startX: number | null = null;
-  let dx = 0;
-  track.addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "mouse") return;
-    startX = e.clientX;
-    dx = 0;
-    track.classList.add("is-dragging");
-  });
-  track.addEventListener("pointermove", (e) => {
-    if (startX === null) return;
-    dx = e.clientX - startX;
-    track.style.setProperty("--dx", `${dx}px`);
-  });
-  const end = () => {
-    if (startX === null) return;
-    startX = null;
-    track.classList.remove("is-dragging");
-    track.style.setProperty("--dx", "0px");
-    if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1));
-  };
-  track.addEventListener("pointerup", end);
-  track.addEventListener("pointercancel", end);
-
-  // Slide visuals only animate while the slider is on screen.
-  new IntersectionObserver(
-    ([e]) => {
-      visible = e.isIntersecting || reduceMotion;
-      activate();
-    },
-    { threshold: 0.35 },
-  ).observe(root);
-
-  go(0);
-}
-
-// ---------- Product views ----------
-const VIEWS: Record<string, { src: string; alt: string; caption: string }> = {
-  dining: {
-    src: "/shots/guest-dining.jpg",
-    alt: "Dining view: the microphone orb, a welcome line and suggested requests.",
-    caption: "<strong>Dining.</strong> The table device: the listening orb, the guest’s words, the waiter’s reply, and a live table order.",
-  },
-  management: {
-    src: "/shots/management.jpg",
-    alt: "Management view: table KPIs, the spatial floor map, menu availability and the kitchen display.",
-    caption: "<strong>Management.</strong> KPIs, a spatial floor map, 86’d stock that applies on the very next guest turn, and a live Kitchen Display System.",
-  },
-  logs: {
-    src: "/shots/logs.jpg",
-    alt: "Logs view: the latest turn with its transcript, reply, latency breakdown and live event stream.",
-    caption: "<strong>Logs.</strong> Every turn inspected: what was heard, what the waiter said, the state change, and the latency breakdown.",
-  },
-};
-
-function initViews(): void {
-  const tabs = $$<HTMLButtonElement>(".segment-btn[data-view]");
-  const img = $<HTMLImageElement>("#viewImg");
-  const panel = $<HTMLElement>("#view-shot");
-  const caption = $<HTMLElement>("#viewCaption");
-  if (!img || !panel || !caption) return;
-
-  // Warm the other screenshots so switching is instant.
-  for (const v of Object.values(VIEWS)) new Image().src = v.src;
-
-  const select = (tab: HTMLButtonElement) => {
-    const view = VIEWS[tab.dataset.view ?? ""];
-    if (!view) return;
-    for (const t of tabs) {
-      t.setAttribute("aria-selected", String(t === tab));
-      t.tabIndex = t === tab ? 0 : -1;
-    }
-    panel.setAttribute("aria-labelledby", tab.id);
-    img.classList.add("is-swap");
-    window.setTimeout(() => {
-      img.src = view.src;
-      img.alt = view.alt;
-      caption.innerHTML = view.caption;
-      img.classList.remove("is-swap");
-    }, reduceMotion ? 0 : 200);
-  };
-
-  tabs.forEach((tab, k) => {
-    tab.tabIndex = k === 0 ? 0 : -1;
-    tab.addEventListener("click", () => select(tab));
-    tab.addEventListener("keydown", (e) => {
-      const step = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-      if (!step) return;
-      const nextTab = tabs[(k + step + tabs.length) % tabs.length];
-      nextTab.focus();
-      select(nextTab);
-    });
-  });
-}
-
 // ---------- Teaser player ----------
-/**
- * Plays silently and loops while on screen. Sound is a tap away: the speaker button,
- * or the first tap on the video. After that, a tap pauses and resumes.
- */
+/** Plays silently and loops while on screen; the speaker button or the first tap brings the sound in. */
 function initPlayer(): void {
   const player = $<HTMLElement>("#player");
   const video = $<HTMLVideoElement>("#teaserVideo");
@@ -305,23 +135,19 @@ function initPlayer(): void {
   if (!player || !video || !playBtn || !soundBtn) return;
 
   let userPaused = false;
-  let onScreen = false;
-
   const sync = () => {
     player.classList.toggle("is-playing", !video.paused);
     soundBtn.setAttribute("aria-pressed", String(!video.muted));
     soundBtn.setAttribute("aria-label", video.muted ? "Turn Sound On" : "Turn Sound Off");
   };
   const play = () => video.play().catch(() => sync());
-
   for (const ev of ["play", "pause", "volumechange"]) video.addEventListener(ev, sync);
 
   if (!reduceMotion) {
     new IntersectionObserver(
       ([e]) => {
-        onScreen = e.isIntersecting;
-        if (onScreen && !userPaused) void play();
-        else if (!onScreen && !video.paused) video.pause();
+        if (e.isIntersecting && !userPaused) void play();
+        else if (!e.isIntersecting && !video.paused) video.pause();
       },
       { threshold: 0.4 },
     ).observe(player);
@@ -333,7 +159,6 @@ function initPlayer(): void {
     video.muted = false;
     void play();
   });
-
   soundBtn.addEventListener("click", (e) => {
     e.stopPropagation();
     video.muted = !video.muted;
@@ -342,7 +167,6 @@ function initPlayer(): void {
       void play();
     }
   });
-
   video.addEventListener("click", () => {
     if (video.paused) {
       userPaused = false;
@@ -354,26 +178,57 @@ function initPlayer(): void {
       video.pause();
     }
   });
-
   sync();
 }
 
-// ---------- Marquee: duplicate the track so the loop is seamless ----------
-function initMarquee(): void {
-  const track = $<HTMLElement>("#marqueeTrack");
-  if (!track) return;
-  for (const li of Array.from(track.children)) {
-    const copy = li.cloneNode(true) as HTMLElement;
-    copy.setAttribute("aria-hidden", "true");
-    track.appendChild(copy);
+// ---------- How it works: edge vs hosted models ----------
+function initProfiles(): void {
+  const buttons = $$<HTMLButtonElement>(".hw-profile .segment-btn");
+  const swappable = $$<HTMLElement>("[data-edge][data-hosted]");
+  for (const b of buttons) {
+    b.addEventListener("click", () => {
+      const profile = b.dataset.profile === "hosted" ? "hosted" : "edge";
+      for (const other of buttons) other.setAttribute("aria-selected", String(other === b));
+      for (const el of swappable) {
+        el.classList.add("is-swap");
+        window.setTimeout(() => {
+          el.textContent = el.dataset[profile] ?? "";
+          el.classList.remove("is-swap");
+        }, reduceMotion ? 0 : 180);
+      }
+    });
   }
 }
 
+// ---------- Turn detection waveform ----------
+// RMS envelope of the demo's own "We'll take those two, please." clip (1.52 s), then silence.
+const SPEECH = [0.06, 0.06, 0.16, 0.32, 0.51, 0.58, 0.16, 0.06, 0.1, 0.2, 0.76, 1.0, 0.65, 0.3, 0.08, 0.06, 0.06, 0.06, 0.52, 0.53, 0.46, 0.38, 0.28, 0.24, 0.23, 0.06, 0.06, 0.12, 0.16, 0.39, 0.31, 0.28, 0.28, 0.19, 0.08, 0.06, 0.1, 0.06, 0.24, 0.41, 0.41, 0.34, 0.31, 0.26, 0.17, 0.09, 0.06, 0.06, 0.06, 0.06, 0.06, 0.06, 0.07, 0.06, 0.06, 0.06];
+const SPEECH_S = 1.52;
+const TIMELINE_S = 3.0;
+
+function initWave(): void {
+  const wave = $<HTMLElement>("#aaiWave");
+  const scale = $<HTMLElement>(".aai-turn-scale");
+  if (!wave || !scale) return;
+  const barS = SPEECH_S / SPEECH.length;
+  const total = Math.round(TIMELINE_S / barS);
+  for (let i = 0; i < total; i++) {
+    const bar = document.createElement("span");
+    const speaking = i < SPEECH.length;
+    bar.style.setProperty("--h", String(speaking ? SPEECH[i] : 0.04));
+    bar.style.setProperty("--t", `${i * 8}ms`);
+    if (!speaking) bar.className = "is-silence";
+    wave.appendChild(bar);
+  }
+  scale.style.setProperty("--min", `${((SPEECH_S + 0.4) / TIMELINE_S) * 100}%`);
+  scale.style.setProperty("--max", `${((SPEECH_S + 1.0) / TIMELINE_S) * 100}%`);
+}
+
 initNav();
-initMarquee();
+initWave();
 initReveals();
 initCounters();
 initOrb();
-initSlider();
-initViews();
 initPlayer();
+initProfiles();
+initShowcase();

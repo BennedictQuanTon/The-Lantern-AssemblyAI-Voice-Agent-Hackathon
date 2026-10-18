@@ -7,7 +7,8 @@ import time
 from pathlib import Path
 from typing import Literal
 
-from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -17,6 +18,7 @@ from .domain.restaurant.models import KitchenDecision
 from .domain.restaurant.store import get_lantern_store
 from .domain.restaurant.workflow import OrderWorkflow
 from .services.kitchen_events import KitchenEventBroker
+from .services.rate_limit import DemoLimits, DemoRateLimiter, client_ip
 from .services.realtime_session import RealtimeSession
 from .providers.asr.assemblyai_stream import CONNECT_BUDGET_S, AssemblyAIRealtimeProvider, TranscriptEvent
 from .providers.llm.gemini import GeminiClient
@@ -29,6 +31,30 @@ store = get_lantern_store()
 repository = SQLiteOrderRepository(settings.database_path)
 workflow = OrderWorkflow(repository, store)
 broker = KitchenEventBroker()
+limiter = DemoRateLimiter(DemoLimits(
+    enabled=settings.rate_limit_enabled,
+    sessions_per_ip_per_day=settings.demo_sessions_per_ip_per_day,
+    turns_per_ip_per_day=settings.demo_turns_per_ip_per_day,
+    turns_per_day=settings.demo_turns_per_day,
+    max_concurrent_sessions=settings.demo_max_concurrent_sessions,
+    max_session_seconds=settings.demo_max_session_seconds,
+    max_turns_per_session=settings.demo_max_turns_per_session,
+    writes_per_ip_per_minute=settings.demo_writes_per_ip_per_minute,
+    max_transcript_chars=settings.demo_max_transcript_chars,
+))
+# Read-only cross-origin access, so the landing page can watch /ready while a sleeping demo wakes up.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[origin.strip() for origin in settings.cors_allow_origins.split(",") if origin.strip()],
+    allow_methods=["GET"],
+)
+
+
+def check_write(request: Request) -> None:
+    """Cap staff writes per visitor, so the public demo's floor and menu can't be flooded."""
+    decision = limiter.allow_write(client_ip(request.headers, request.client.host if request.client else None))
+    if not decision.allowed:
+        raise HTTPException(429, decision.message, headers={"Retry-After": str(decision.retry_after_s)})
 def _llm_name() -> str:
     return settings.gemini_model if settings.llm_provider == "gemini" else settings.ollama_model
 
@@ -103,6 +129,7 @@ def ready():
         "providers": {"asr": settings.assemblyai_speech_model, "llm": _llm_name(), "tts": _tts_name()},
         "provider_state": provider_state,
         "tts_device": tts.resolved_device,
+        "demo_limits": limiter.usage(),
     }
 
 
@@ -127,8 +154,9 @@ def floor():
 
 
 @app.post("/floor/status")
-def set_table_status(request: TableStatusRequest):
+def set_table_status(request: TableStatusRequest, http: Request):
     """Seat or clear a table from the operations floor map."""
+    check_write(http)
     table = store.set_table_status(request.table_id, request.status)
     if table is None:
         raise HTTPException(404, "table not found")
@@ -136,7 +164,8 @@ def set_table_status(request: TableStatusRequest):
 
 
 @app.post("/menu/set-available")
-def set_available(request: AvailabilityRequest):
+def set_available(request: AvailabilityRequest, http: Request):
+    check_write(http)
     item = store.set_available(request.sku, request.available)
     if item is None:
         raise HTTPException(404, "menu item not found")
@@ -162,7 +191,8 @@ def kitchen_orders():
 
 
 @app.post("/api/kitchen/orders/{order_id}/decisions")
-async def kitchen_decision(order_id: str, request: KitchenDecision):
+async def kitchen_decision(order_id: str, request: KitchenDecision, http: Request):
+    check_write(http)
     try:
         workflow.validate_kitchen_decision(order_id, request.model_dump())
         order = repository.decide(order_id, request.model_dump())
@@ -206,6 +236,20 @@ async def realtime(websocket: WebSocket):
     if not table_id or not store.get_table(table_id):
         await websocket.close(code=1008, reason="valid table_id is required")
         return
+    ip = client_ip(websocket.headers, websocket.client.host if websocket.client else None)
+    admitted = limiter.open_session(ip)
+    if not admitted.allowed:
+        await websocket.accept()
+        await websocket.send_json(admitted.payload())
+        await websocket.close(code=1008, reason=admitted.scope)
+        return
+    try:
+        await _realtime_session(websocket, table_id, ip)
+    finally:
+        limiter.close_session()
+
+
+async def _realtime_session(websocket: WebSocket, table_id: str, ip: str) -> None:
     resume_id = websocket.query_params.get("order_id")
     resumed = repository.get_order(resume_id) if resume_id else None
     if resumed and (resumed["table_id"] != table_id or resumed["status"] in {"cancelled", "ready", "rejected"}):
@@ -220,6 +264,8 @@ async def realtime(websocket: WebSocket):
     cancel_event = asyncio.Event()
     response_task: asyncio.Task | None = None
     guest_queue = broker.subscribe()
+    turns_taken = 0
+    limit_reached = asyncio.Event()
 
     async def send(payload: dict) -> None:
         async with send_lock:
@@ -267,7 +313,14 @@ async def realtime(websocket: WebSocket):
             await send({"type": "error", "message": str(exc)})
 
     def start_response(text: str, language_code: str = "en") -> None:
-        nonlocal response_task, cancel_event
+        nonlocal response_task, cancel_event, turns_taken
+        decision = limiter.allow_turn(ip, turns_taken, text)
+        if not decision.allowed:
+            asyncio.create_task(send(decision.payload()))
+            if decision.scope != "too_long":
+                limit_reached.set()
+            return
+        turns_taken += 1
         if response_task and not response_task.done():
             cancel_event.set()
             response_task.cancel()
@@ -332,6 +385,19 @@ async def realtime(websocket: WebSocket):
 
         asr_connect_task = asyncio.create_task(connect_asr())
     guest_events_task = asyncio.create_task(deliver_kitchen_events())
+
+    async def enforce_limits() -> None:
+        """End the session at its time cap or once a turn limit is hit; streaming STT bills while the socket is open."""
+        if not limiter.limits.enabled:
+            return
+        try:
+            await asyncio.wait_for(limit_reached.wait(), timeout=limiter.limits.max_session_seconds)
+        except asyncio.TimeoutError:
+            await send(limiter.session_expired().payload())
+        await asyncio.sleep(0.5)
+        await websocket.close(code=1008, reason="demo limit")
+
+    limits_task = asyncio.create_task(enforce_limits())
     await send({"type": "session_ready", "table_id": table_id, "order": workflow.describe_order(resumed) if resumed else None, "providers": {"asr": settings.assemblyai_speech_model, "llm": _llm_name(), "tts": _tts_name()}, "provider_state": provider_state, "asr_status": "connecting" if asr else "unavailable", "has_tts": provider_state["tts_warm"], "has_cartesia": settings.tts_provider == "cartesia"})
     try:
         while True:
@@ -349,7 +415,8 @@ async def realtime(websocket: WebSocket):
                     await asr.send_audio(message["bytes"])
                 else:
                     await send({"type": "provider_unavailable", "provider": "assemblyai", "message": "speech recognition is not connected"})
-    except WebSocketDisconnect:
+    except (WebSocketDisconnect, RuntimeError):
+        # RuntimeError: the limits task closed the socket while this loop was waiting on it.
         pass
     finally:
         cancel_event.set()
@@ -358,6 +425,7 @@ async def realtime(websocket: WebSocket):
         if asr_connect_task and not asr_connect_task.done():
             asr_connect_task.cancel()
         guest_events_task.cancel()
+        limits_task.cancel()
         broker.unsubscribe(guest_queue)
         if asr and asr_ready.is_set():
             await asr.close()

@@ -1,0 +1,65 @@
+/* /demo: the wake-up page while the live app boots on Render. Same tokens and app components. */
+
+.wu-body { display: flex; flex-direction: column; }
+.wu { flex: 1; display: flex; align-items: center; padding: clamp(32px, 6vw, 72px) 0 clamp(48px, 7vw, 88px); }
+.wu-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: clamp(32px, 6vw, 88px); align-items: center; }
+
+.wu-main { text-align: left; }
+.wu-orb { margin: 0 0 8px -40px; width: 260px; height: 260px; }
+.wu-mic { cursor: default; }
+.wu[data-state="ready"] .wu-mic { background-color: var(--color-tertiary); }
+.wu-eyebrow { margin-bottom: 14px; }
+.wu-title { font-size: clamp(34px, 4.4vw, 52px); line-height: 1.1; letter-spacing: -0.02em; text-wrap: balance; }
+.wu-sub { margin-top: 16px; max-width: 560px; font-size: 18px; line-height: 1.6; color: var(--content-secondary); text-wrap: pretty; }
+
+.wu-progress { position: relative; height: 3px; margin-top: 32px; max-width: 560px; background: var(--border-subtle); overflow: hidden; }
+.wu-progress span { position: absolute; inset: 0; background: var(--color-tertiary); transform-origin: left; transform: scaleX(0); transition: transform 600ms var(--l-ease); }
+.wu-elapsed { margin-top: 10px; font-size: 13px; color: var(--content-tertiary); }
+.wu-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.wu-actions [aria-disabled="true"] { opacity: 0.4; pointer-events: none; }
+.wu-redirect { margin-top: 14px; font-size: 14px; color: var(--content-secondary); }
+.wu-link { font-size: 14px; color: var(--content-primary); text-decoration: underline; text-underline-offset: 3px; }
+
+.wu-side { display: grid; gap: 20px; }
+.wu-steps { background: var(--surface-bg); border: 1px solid var(--border-subtle); }
+.wu-step { display: grid; grid-template-columns: 28px 1fr; gap: 14px; align-items: start; padding: 16px 20px; }
+.wu-step + .wu-step { border-top: 1px solid var(--border-subtle); }
+.wu-step-name { font-size: 15px; font-weight: 600; color: var(--content-tertiary); transition: color 300ms; }
+.wu-step-meta { margin-top: 2px; font-size: 13px; color: var(--content-tertiary); word-break: break-word; }
+.wu-step[data-state="active"] .wu-step-name, .wu-step[data-state="done"] .wu-step-name { color: var(--content-primary); }
+.wu-step[data-state="done"] .wu-step-meta { color: var(--content-secondary); }
+.wu-step[data-state="error"] .wu-step-name, .wu-step[data-state="error"] .wu-step-meta { color: var(--color-error); }
+
+.wu-icon { position: relative; width: 22px; height: 22px; margin-top: 1px; border-radius: var(--radius-avatar); border: 1.5px solid var(--border-medium); }
+.wu-step[data-state="active"] .wu-icon { border-color: var(--border-subtle); border-top-color: var(--color-tertiary); animation: wu-spin 900ms linear infinite; }
+.wu-step[data-state="done"] .wu-icon { background: var(--color-tertiary); border-color: var(--color-tertiary); }
+.wu-step[data-state="done"] .wu-icon::after { content: ""; position: absolute; left: 6px; top: 6px; width: 8px; height: 4px; border-left: 2px solid var(--surface-bg); border-bottom: 2px solid var(--surface-bg); transform: rotate(-45deg); }
+.wu-step[data-state="error"] .wu-icon { border-color: var(--color-error); }
+.wu-step[data-state="error"] .wu-icon::after { content: "!"; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--color-error); }
+@keyframes wu-spin { to { transform: rotate(360deg); } }
+
+.wu-log { background: var(--surface-bg); border: 1px solid var(--border-subtle); }
+.wu-log-head { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--content-secondary); }
+.wu-log-head span:last-child { font-weight: 500; letter-spacing: 0; text-transform: none; color: var(--content-tertiary); }
+.wu-log-lines { min-height: 132px; padding: 10px 16px 12px; font-family: "Source Code Pro", ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; line-height: 1.7; }
+.wu-log-line { display: flex; gap: 12px; color: var(--content-secondary); animation: wu-line-in 300ms var(--l-ease); }
+.wu-log-line span:first-child { color: var(--content-tertiary); white-space: pre; }
+.wu-log-line.is-ok { color: var(--content-primary); }
+.wu-log-line.is-warn { color: var(--color-warning); }
+@keyframes wu-line-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+.wu-tips { padding: 16px 20px; background: var(--surface-bg); border: 1px solid var(--border-subtle); }
+.wu-tip { display: inline-block; margin-top: 10px; cursor: default; transition: opacity 250ms; }
+.wu-tip.is-swap { opacity: 0; }
+.wu-note { margin-top: 12px; font-size: 13px; color: var(--content-tertiary); }
+
+@media (max-width: 900px) {
+  .wu-grid { grid-template-columns: 1fr; }
+  .wu-orb { margin: 0 auto 4px; }
+  .wu-main { text-align: center; }
+  .wu-sub, .wu-progress { margin-left: auto; margin-right: auto; }
+  .wu-actions { justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wu-step[data-state="active"] .wu-icon, .wu-log-line { animation: none; }
+}
