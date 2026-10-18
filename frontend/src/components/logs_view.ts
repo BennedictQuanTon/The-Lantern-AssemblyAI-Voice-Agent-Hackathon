@@ -6,6 +6,7 @@
  */
 
 import { TurnTelemetry } from "../types/realtime";
+import { apiUrl } from "../services/api";
 
 export class LogsView {
   private container: HTMLElement;
@@ -63,7 +64,7 @@ export class LogsView {
 
   public async fetchInitialHistory(): Promise<void> {
     try {
-      const res = await fetch("/metrics/turns?limit=40");
+      const res = await fetch(apiUrl("/metrics/turns?limit=40"));
       if (!res.ok) return;
       const data = await res.json();
       if (Array.isArray(data) && data.length > 0) {

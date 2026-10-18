@@ -57,3 +57,14 @@ sentence-transformers/
 *.ses
 
 # Large source design assets are kept under design/source/ when intentionally versioned.
+
+# Local media: video masters, raw photos and exports stay out of git (GitHub rejects files over
+# 100 MB). Keep them in _media/. The web cut of the teaser lives in landing/public/media/.
+/_media/
+/*.mp4
+/*.mov
+/*.webm
+*.heic
+*.HEIC
+/*.jpg
+/*.jpeg

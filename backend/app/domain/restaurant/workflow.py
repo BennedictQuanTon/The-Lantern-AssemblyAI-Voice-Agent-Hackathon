@@ -72,7 +72,7 @@ class OrderWorkflow:
     def submit(self, table_id: str, guest_session_id: str, transcript: str, intent: IntentProposal, order_id: str | None = None) -> dict[str, Any]:
         order = self._current(order_id, table_id, guest_session_id)
         action = intent.action
-        if action not in {"create_or_update_order", "replace_item", "remove_item", "cancel_order", "accept_substitute", "reject_substitute"}:
+        if action not in {"create_or_update_order", "set_quantity", "replace_item", "remove_item", "cancel_order", "accept_substitute", "reject_substitute"}:
             return {"status": "clarification_required", "errors": [f"unsupported order action: {action}"]}
 
         effective_allergies = list(dict.fromkeys((order["allergies"] if order else []) + intent.allergies))
@@ -102,12 +102,33 @@ class OrderWorkflow:
                     match["quantity"] += item.quantity
                 else:
                     lines.append(item.model_dump())
+        elif action == "set_quantity":
+            item = intent.items[0]
+            matches = [line for line in lines if line["sku"] == item.sku]
+            if not matches:
+                return {"status": "clarification_required", "errors": [f"{item.sku} is not in the order"]}
+            if len(matches) != 1:
+                return {"status": "clarification_required", "errors": ["please choose which version of the dish to change"]}
+            if matches[0]["quantity"] == item.quantity:
+                return {**self.describe_order(order), "unchanged": True}
+            if item.quantity > matches[0]["quantity"]:
+                addition = IntentProposal(action="create_or_update_order", allergies=effective_allergies,
+                                          items=[item.model_copy(update={"modifiers": matches[0].get("modifiers", [])})])
+                errors = validate_intent(addition, self.store)
+                if errors:
+                    unavailable = [item.sku] if not self.store.is_available(item.sku) else []
+                    return {"status": "clarification_required", "errors": errors,
+                            "unavailable_items": unavailable,
+                            "alternatives": self.alternatives(item.sku, effective_allergies) if unavailable else []}
+            # Absolute quantity edits preserve the saved modifiers and every other line.
+            matches[0]["quantity"] = item.quantity
         elif action == "replace_item":
             match = next((line for line in lines if line["sku"] == intent.replaces_sku), None)
             if match is None:
                 return {"status": "clarification_required", "errors": [f"{intent.replaces_sku} is not in the order"]}
             replacement = intent.items[0]
-            if replacement.sku == match["sku"] and replacement.modifiers == match.get("modifiers", []):
+            if (replacement.sku == match["sku"] and replacement.modifiers == match.get("modifiers", [])
+                    and replacement.quantity == match["quantity"]):
                 return {"status": "clarification_required", "errors": ["the replacement is identical to the current item"]}
             lines.remove(match)
             lines.append(replacement.model_dump())

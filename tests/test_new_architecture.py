@@ -10,6 +10,7 @@ from backend.app.domain.restaurant.repository import SQLiteOrderRepository
 from backend.app.domain.restaurant.store import LanternStore
 from backend.app.domain.restaurant.validation import validate_intent
 from backend.app.providers.tts.kokoro import KokoroProvider
+from backend.app.services.language_router import resolve_language
 from backend.app.providers.llm.ollama import OllamaClient
 from backend.app.providers.asr.assemblyai_stream import CONNECT_TIMEOUT_S, AssemblyAIRealtimeProvider
 from backend.app.services.realtime_session import RealtimeSession
@@ -17,6 +18,11 @@ from eval.benchmarks.restaurant.new_architecture import load_dataset, run_offlin
 
 
 class NewArchitectureTests(unittest.TestCase):
+    def test_english_word_still_gets_a_voice(self):
+        language, supported = resolve_language("English")
+        self.assertEqual(language, "en")
+        self.assertTrue(supported)
+
     def test_kokoro_mapping_and_caption_fallback(self):
         provider = KokoroProvider("hexgrad/Kokoro-82M")
         self.assertEqual(provider.voice_for("ja"), ("j", "jf_alpha"))

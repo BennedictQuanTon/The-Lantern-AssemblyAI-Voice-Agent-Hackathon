@@ -1,0 +1,143 @@
+{
+  "baseline_ref": "origin/feature/lantern-waiter",
+  "baseline_commit": "9f08e370b25609a64ee0635bc4679737944530d9",
+  "test_date_utc": "2026-09-29",
+  "deployed_url": "https://lantern-zqen.onrender.com",
+  "deployed_completed_run": {
+    "run_id": "2026-09-29T162103Z",
+    "attempted": 10,
+    "passed_steps": 2,
+    "note": "Downstream basket gates inherit the quantity error; these are not eight independent bugs.",
+    "timing": {
+      "response_ms": {
+        "count": 10,
+        "median_ms": 1337.07,
+        "p95_nearest_rank_ms": 3412.44,
+        "maximum_ms": 3412.44
+      },
+      "first_audio_ms": {
+        "count": 10,
+        "median_ms": 1526.1,
+        "p95_nearest_rank_ms": 3559.97,
+        "maximum_ms": 3559.97
+      },
+      "complete_ms": {
+        "count": 10,
+        "median_ms": 3112.4,
+        "p95_nearest_rank_ms": 3972.67,
+        "maximum_ms": 3972.67
+      }
+    },
+    "resume_passed": true,
+    "cleanup_passed": true,
+    "original_regressions": [
+      {
+        "kind": "quantity",
+        "input": "Change the Lemongrass Iced Tea quantity to one.",
+        "reply_status": "draft",
+        "reply": "Your order now includes 1 Lemongrass Tofu, 3 Lemongrass Iced Tea. Total: $13.50. Tell me when you'd like me to place it.",
+        "saved_items": [
+          {
+            "sku": "VG_TOFU",
+            "quantity": 1,
+            "modifiers": []
+          },
+          {
+            "sku": "DRINK_LEMON",
+            "quantity": 3,
+            "modifiers": []
+          }
+        ],
+        "saved_total": 13.5,
+        "checks": {
+          "exact_basket": false,
+          "total": false,
+          "not_placed": true,
+          "completed": true,
+          "audio_received": true
+        }
+      },
+      {
+        "kind": "readback",
+        "input": "What is in my order?",
+        "reply_status": "menu_query",
+        "reply": "Available dishes include Coconut Sticky Rice ($4.50), Fried Banana ($4.00), Sweet Taro Soup ($4.00), Lemongrass Iced Tea ($2.50), Local Craft Beer ($3.50).",
+        "saved_items": [
+          {
+            "sku": "VG_TOFU",
+            "quantity": 1,
+            "modifiers": []
+          },
+          {
+            "sku": "DRINK_LEMON",
+            "quantity": 3,
+            "modifiers": []
+          }
+        ],
+        "saved_total": 13.5,
+        "checks": {
+          "exact_basket": false,
+          "total": false,
+          "not_placed": true,
+          "no_revision": true,
+          "basket_in_reply": false,
+          "total_in_reply": false,
+          "not_menu": false,
+          "completed": true,
+          "audio_received": true
+        }
+      },
+      {
+        "kind": "repeat",
+        "input": "Read back my order, but do not place it.",
+        "reply_status": "menu_query",
+        "reply": "Available dishes include Coconut Sticky Rice ($4.50), Fried Banana ($4.00), Sweet Taro Soup ($4.00), Lemongrass Iced Tea ($2.50), Local Craft Beer ($3.50).",
+        "saved_items": [
+          {
+            "sku": "VG_TOFU",
+            "quantity": 1,
+            "modifiers": []
+          },
+          {
+            "sku": "DRINK_LEMON",
+            "quantity": 3,
+            "modifiers": []
+          }
+        ],
+        "saved_total": 13.5,
+        "checks": {
+          "exact_basket": false,
+          "total": false,
+          "not_placed": true,
+          "no_revision": true,
+          "basket_in_reply": false,
+          "total_in_reply": false,
+          "not_menu": false,
+          "completed": true,
+          "audio_received": true
+        }
+      }
+    ]
+  },
+  "separate_deployed_failure": {
+    "run_id": "2026-09-29T161806Z",
+    "input": "Add one Lemongrass Tofu and two Lemongrass Iced Tea to my order.",
+    "error_event": {
+      "client_ms": 30271.97,
+      "type": "error",
+      "message": ""
+    },
+    "not_fixed_by_this_patch": true
+  },
+  "fixed_working_tree_validation": {
+    "unit_tests": 68,
+    "new_regression_tests": 17,
+    "offline_replay_steps_passed": 30,
+    "offline_replay_steps_attempted": 30,
+    "offline_repetitions": 3,
+    "frontend_typecheck": "PASS",
+    "frontend_build": "PASS",
+    "python_compilation": "PASS",
+    "live_provider_validation": "No local Gemini or Cartesia credentials; contract extraction and WebSocket audio use fixtures. Patched deployment still needs verification."
+  }
+}

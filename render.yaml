@@ -1,0 +1,43 @@
+services:
+  - type: web
+    name: lantern
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: LLM_PROVIDER
+        value: gemini
+      - key: TTS_PROVIDER
+        value: cartesia
+      - key: GEMINI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: CARTESIA_MODEL
+        value: sonic-3
+      - key: ASSEMBLYAI_SPEECH_MODEL
+        value: universal-3-5-pro
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: CARTESIA_API_KEY
+        sync: false
+      - key: ASSEMBLYAI_API_KEY
+        sync: false
+      # Public demo limits (backend/app/services/rate_limit.py). Off while judging is in progress so
+      # the submitted link is never throttled; flip to "true" afterwards to protect the API budget.
+      - key: RATE_LIMIT_ENABLED
+        value: "false"
+      - key: DEMO_SESSIONS_PER_IP_PER_DAY
+        value: "8"
+      - key: DEMO_TURNS_PER_IP_PER_DAY
+        value: "80"
+      - key: DEMO_TURNS_PER_DAY
+        value: "2000"
+      - key: DEMO_MAX_CONCURRENT_SESSIONS
+        value: "4"
+      - key: DEMO_MAX_SESSION_SECONDS
+        value: "300"
+      - key: DEMO_MAX_TURNS_PER_SESSION
+        value: "30"
+      # The Vercel site (landing + app) calls this API cross-origin. After the first Vercel deploy,
+      # set this to its URL(s), comma-separated, e.g. https://the-lantern.vercel.app
+      - key: CORS_ALLOW_ORIGINS
+        value: "*"

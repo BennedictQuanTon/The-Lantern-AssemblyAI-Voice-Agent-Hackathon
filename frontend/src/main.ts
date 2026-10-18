@@ -19,12 +19,14 @@ import { GuestView } from "./components/guest_view";
 import { OpsView } from "./components/ops_view";
 import { LogsView } from "./components/logs_view";
 import type { BasketItem, TurnTelemetry, V2BasketLine, V2Order } from "./types/realtime";
+import { apiUrl } from "./services/api";
 
 // One device per table: /?table_id=T4. Defaults to T4 for the demo.
 const TABLE_ID = new URLSearchParams(location.search).get("table_id")?.trim() || "T4";
 
 // Prerecorded Kokoro clips (tools/generate_fillers.py) played while Qwen and Kokoro work.
-const FILLER_DIR = "/audio/fillers";
+// Static clips ship with this build, so they follow its base path (/ on Render, /app/ on Vercel).
+const FILLER_DIR = `${import.meta.env.BASE_URL}audio/fillers`;
 const FILLERS = ["recommend_en", "order_en", "check_en", "place_en", "generic_es"];
 function fillerFor(transcript: string, language: string): string {
   const said = transcript.toLowerCase();
@@ -77,6 +79,8 @@ class LanternApp {
   private viewLogsPanel: HTMLElement;
 
   private isVoiceActive: boolean = false;
+  // Set when the public demo's limits end the session, so the reason stays on screen.
+  private limitNotice: string | null = null;
   private pendingPrompt: string | null = null;
   private turn: TurnInProgress | null = null;
   private providers: { asr?: string; llm?: string; tts?: string } = {};
@@ -205,7 +209,7 @@ class LanternApp {
     this.voiceService.onClose = () => {
       this.setConnectionStatus("status-dot", "Disconnected");
       this.logsView.addEvent("ws_close", "Realtime WebSocket disconnected", "warn");
-      if (this.isVoiceActive) this.stopVoiceSession();
+      if (this.isVoiceActive) this.stopVoiceSession(this.limitNotice !== null);
     };
 
     this.voiceService.onError = () => {
@@ -287,6 +291,12 @@ class LanternApp {
       } else if (msg.type === "turn_complete") {
         this.logsView.handleTurnComplete(this.telemetry(msg.pipeline_ms, msg.voice_ttfb_ms));
         this.turn = null;
+      } else if (msg.type === "rate_limited") {
+        this.limitNotice = msg.message;
+        if (this.pcmPlayer) this.pcmPlayer.stop();
+        this.guestView.showAgentAnswer(msg.message);
+        this.guestView.setGuestStatus("Demo limit reached");
+        this.logsView.addEvent("rate_limited", `${msg.scope} · ${msg.message}`, "warn");
       } else if (msg.type === "error") {
         this.logsView.addEvent("error", msg.message ?? "Server error", "warn");
       }
@@ -320,6 +330,7 @@ class LanternApp {
 
   private async startVoiceSession(): Promise<void> {
     this.ensureAudioContext();
+    this.limitNotice = null;
 
     try {
       await this.voiceService.connect();
@@ -347,7 +358,8 @@ class LanternApp {
     }
   }
 
-  private stopVoiceSession(): void {
+  /** `keepNotice` leaves the last message on screen, e.g. why the demo ended the session. */
+  private stopVoiceSession(keepNotice = false): void {
     if (this.micRecorder) {
       this.micRecorder.stop();
     }
@@ -359,7 +371,7 @@ class LanternApp {
 
     this.guestView.setMicActive(false);
     this.guestView.setOrbMode("idle");
-    this.guestView.setIdlePrompt();
+    if (!keepNotice) this.guestView.setIdlePrompt();
     this.logsView.addEvent("mic_stopped", "Microphone stream stopped", "info");
   }
 
@@ -400,7 +412,7 @@ class LanternApp {
     };
 
     this.opsView.onKitchenAction = async (orderId, action) => {
-      const order = await fetch(`/api/orders/${encodeURIComponent(orderId)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      const order = await fetch(apiUrl(`/api/orders/${encodeURIComponent(orderId)}`)).then((r) => (r.ok ? r.json() : null)).catch(() => null);
       if (!order) return;
       const updated = await this.opsService.decide(order as V2Order, action);
       if (updated) this.opsView.upsertOrder(updated);

@@ -5,7 +5,10 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field
 
 
-Action = Literal["menu_query", "recommend", "create_or_update_order", "replace_item", "remove_item", "accept_substitute", "reject_substitute", "cancel_order", "place_order", "confirm", "decline", "clarify"]
+Action = Literal[
+    "menu_query", "recommend", "readback", "create_or_update_order", "set_quantity", "replace_item", "remove_item",
+    "accept_substitute", "reject_substitute", "cancel_order", "place_order", "confirm", "decline", "clarify",
+]
 # What a reference points at; code resolves it to SKUs from the dialogue state, never the model.
 Ref = Literal["none", "offered_all", "offered_first", "offered_second", "pending", "last_added"]
 

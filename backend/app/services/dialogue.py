@@ -144,6 +144,12 @@ def resolve(intent: IntentProposal, dialogue: DialogueState, order: dict[str, An
     open_order = bool(order and order.get("status") not in CLOSED_STATUSES)
     confirming = kind in {"confirm_cancel", "confirm_place"}
 
+    if action == "readback":
+        # Asking what is saved neither writes a revision nor opens a placement confirmation.
+        if not open_order or not lines:
+            return Resolution("clarify", message="no_order", clear_pending=True)
+        return Resolution("readback", clear_pending=True)
+
     if action in {"confirm", "decline", "accept_substitute", "reject_substitute"}:
         yes = action in {"confirm", "accept_substitute"}
         if kind == "kitchen_substitute" or (order and order.get("status") == "substitution_proposed"):

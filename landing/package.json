@@ -1,0 +1,17 @@
+{
+  "name": "lantern-landing",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && npm run build:app",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "build:app": "npm --prefix ../frontend ci && VITE_BASE=/app/ npm --prefix ../frontend run build -- --outDir ../landing/dist/app --emptyOutDir"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "vite": "^6.2.0"
+  }
+}

@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>The Lantern · AI Maître d’ for Fine Dining</title>
+  <meta name="description" content="The Lantern is a multilingual AI maître d’ that takes a full table’s order by voice, remembers every word, never invents a dish, and keeps the kitchen in sync. Built by Team Develarper for the AssemblyAI Voice Agent Hackathon 2026." />
+  <meta property="og:title" content="The Lantern · AI Maître d’ for Fine Dining" />
+  <meta property="og:description" content="A voice waiter that never invents a dish. Powered by AssemblyAI." />
+  <meta property="og:image" content="/media/lantern-teaser-poster.jpg" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <a href="#hackathon" class="skip-link">Skip to Content</a>
+
+  <!-- ============ Navigation (the app's header, with section links) ============ -->
+  <header class="l-nav" id="nav">
+    <nav class="l-container l-nav-inner" aria-label="Main">
+      <a href="#top" class="header-brand l-link" aria-label="The Lantern × AssemblyAI, back to top">
+        <span class="nav-brand-item">
+          <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-brand-name">The Lantern</span>
+        </span>
+        <span class="nav-brand-divider" aria-hidden="true">×</span>
+        <span class="nav-brand-item nav-partner">
+          <svg class="nav-assembly-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="3" y="10" width="2.5" height="4" rx="1"/><rect x="7.5" y="6" width="2.5" height="12" rx="1"/><rect x="12" y="3" width="2.5" height="18" rx="1"/><rect x="16.5" y="6" width="2.5" height="12" rx="1"/><rect x="21" y="10" width="2.5" height="4" rx="1"/>
+          </svg>
+          <span class="nav-partner-name">AssemblyAI</span>
+        </span>
+      </a>
+
+      <ul class="l-nav-links" id="navLinks">
+        <li><a class="l-link" href="#hackathon">Hackathon</a></li>
+        <li><a class="l-link" href="#problem">Problem</a></li>
+        <li><a class="l-link" href="#product">Product</a></li>
+        <li><a class="l-link" href="#how">How It Works</a></li>
+        <li><a class="l-link" href="#results">Results</a></li>
+        <li><a class="l-link" href="#pricing">Pricing</a></li>
+        <li><a class="l-link" href="#team">Team</a></li>
+      </ul>
+
+      <div class="l-nav-actions">
+        <a href="/demo" class="l-btn l-btn-primary l-btn-sm">Try the Demo</a>
+        <button type="button" class="l-btn l-btn-icon l-nav-toggle" id="navToggle" aria-label="Open Menu" aria-expanded="false" aria-controls="navMobile">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        </button>
+      </div>
+    </nav>
+    <ul class="l-container l-nav-mobile" id="navMobile" hidden>
+      <li><a class="l-link" href="#hackathon">Hackathon</a></li>
+      <li><a class="l-link" href="#problem">Problem</a></li>
+      <li><a class="l-link" href="#product">Product</a></li>
+      <li><a class="l-link" href="#how">How It Works</a></li>
+      <li><a class="l-link" href="#results">Results</a></li>
+      <li><a class="l-link" href="#pricing">Pricing</a></li>
+      <li><a class="l-link" href="#team">Team</a></li>
+    </ul>
+  </header>
+
+  <main>
+    <!-- ============ Hero ============ -->
+    <section id="top" class="l-hero">
+      <span class="l-corner l-corner-tl" aria-hidden="true"></span>
+      <span class="l-corner l-corner-br" aria-hidden="true"></span>
+      <p class="l-rail" aria-hidden="true">Voice Ordering <span>/</span> Real-Time Dining</p>
+
+      <div class="l-container l-center">
+        <h1 class="l-hero-title l-mask-heading" data-immediate>
+          <span class="l-mask"><span>The AI maître d’ that</span></span>
+          <span class="l-mask"><span><em>never invents a dish.</em></span></span>
+        </h1>
+        <span class="l-rule l-rule-center" aria-hidden="true"></span>
+        <p class="l-hero-sub l-reveal" data-immediate style="--d: 200ms">
+          The Lantern takes a full table’s order by voice, remembers every word, and keeps the kitchen in perfect sync.
+        </p>
+        <div class="l-actions l-reveal" data-immediate style="--d: 320ms">
+          <a href="/demo" class="l-btn l-btn-primary l-btn-lg">
+            Try the Live Demo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="#teaser" class="l-btn l-btn-outline l-btn-lg">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+            Watch the Teaser
+          </a>
+        </div>
+        <p class="l-powered l-reveal" data-immediate style="--d: 420ms">
+          <span>Powered by</span>
+          <img src="/logos/assemblyai.svg" alt="AssemblyAI" width="161" height="28" />
+        </p>
+      </div>
+
+      <!-- Product shot: the table device on its welcome screen, the voice states, and a live table order -->
+      <div class="l-container l-hero-stage">
+        <div class="l-stage">
+          <div class="l-device l-device-tablet l-device-in" style="--from: translate3d(0, 40px, 0)">
+            <div class="l-device-screen">
+              <img src="/shots/dining-welcome.jpg" alt="The Lantern on a table tablet: the microphone, “Good evening. Welcome to The Lantern.”, and three suggested requests." width="2000" height="1389" />
+            </div>
+          </div>
+
+          <div class="l-orb-scene l-device-in" style="--from: translate3d(40px, 30px, 0); animation-delay: 260ms" aria-label="Voice states: listening, understanding, speaking">
+            <div class="l-orb" aria-hidden="true">
+              <span class="l-orb-ring r1"></span>
+              <span class="l-orb-ring r2"></span>
+              <span class="l-orb-ring r3"></span>
+              <span class="l-orb-ring r4"></span>
+              <span class="l-orb-mic">
+                <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+              </span>
+            </div>
+            <span class="l-orb-label lbl-listen" data-state="listen">Listening</span>
+            <span class="l-orb-label lbl-understand" data-state="understand">Understanding</span>
+            <span class="l-orb-label lbl-speak" data-state="speak">Speaking</span>
+
+            <div class="l-order-card" aria-label="Live table order">
+              <div class="l-order-head">
+                <span>Table 12 / Order</span>
+                <span class="l-live"><span class="l-live-dot" aria-hidden="true"></span>Live</span>
+              </div>
+              <ol class="l-order-rows">
+                <li><span class="tnum">01</span><span>×</span><span>Salmon</span><span class="l-order-status" data-cycle="Placed,Synced,Ready">Placed</span></li>
+                <li><span class="tnum">02</span><span>×</span><span>Truffle</span><span class="l-order-status" data-cycle="Synced,Ready,Placed">Synced</span></li>
+                <li><span class="tnum">03</span><span>×</span><span>Steak</span><span class="l-order-status" data-cycle="Ready,Placed,Synced">Ready</span></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Hackathon ============ -->
+    <section id="hackathon" class="l-section l-band">
+      <div class="l-container l-center l-narrow">
+        <p class="l-eyebrow l-reveal">The Hackathon</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>Built in one month for the</span></span>
+          <span class="l-mask"><span>AssemblyAI Voice Agent Hackathon.</span></span>
+        </h2>
+        <p class="l-hero-sub l-reveal" style="--d: 200ms">
+          A fully online hackathon run by lablab.ai with AssemblyAI. Every project had to be built on AssemblyAI. The Lantern took the Realtime Speech-to-Text path and brought its own model and voice.
+        </p>
+      </div>
+
+      <div class="l-container l-reveal" style="--d: 120ms">
+        <p class="l-strip-title">Organizers</p>
+        <ul class="l-organizers" aria-label="Organizers">
+          <li>
+            <a class="l-org l-link" href="https://lablab.ai/event/assemblyai-voice-agent-hackathon" target="_blank" rel="noopener noreferrer" aria-label="lablab.ai">
+              <span class="l-lablab-mark" aria-hidden="true"></span>
+              <span class="l-org-word">lablab.ai</span>
+            </a>
+          </li>
+          <li>
+            <a class="l-org l-link" href="https://www.assemblyai.com" target="_blank" rel="noopener noreferrer">
+              <img src="/logos/assemblyai.svg" alt="AssemblyAI" width="161" height="28" class="l-org-aai" />
+            </a>
+          </li>
+          <li>
+            <a class="l-org l-link" href="https://nativelyai.com" target="_blank" rel="noopener noreferrer" aria-label="NativelyAI">
+              <img src="/logos/nativelyai-mark.svg" alt="" width="84" height="42" class="l-org-natively" />
+              <span class="l-org-word">NativelyAI</span>
+            </a>
+          </li>
+        </ul>
+        <p class="l-org-note">lablab.ai is part of NativelyAI.</p>
+      </div>
+
+      <div class="l-container">
+        <ul class="l-facts">
+          <li class="l-reveal">
+            <p class="l-fact-top">Build Window</p>
+            <p class="l-fact-value"><span data-count="30">30</span></p>
+            <p class="l-fact-label">days, September 1 to 30, 2026, fully online.</p>
+          </li>
+          <li class="l-reveal" style="--d: 90ms">
+            <p class="l-fact-top">Challenge Paths</p>
+            <p class="l-fact-value"><span data-count="2">2</span></p>
+            <p class="l-fact-label">Voice Agent API, or Realtime Speech-to-Text API.</p>
+          </li>
+          <li class="l-reveal" style="--d: 180ms">
+            <p class="l-fact-top">Prize Pool</p>
+            <p class="l-fact-value">$<span data-count="10" data-suffix="K">10K</span></p>
+            <p class="l-fact-label">$5K in cash and $5K in AssemblyAI credits.</p>
+          </li>
+          <li class="l-reveal" style="--d: 270ms">
+            <p class="l-fact-top">Winning Teams</p>
+            <p class="l-fact-value"><span data-count="5">5</span></p>
+            <p class="l-fact-label">Each wins $1K in cash and $1K in API credits.</p>
+          </li>
+        </ul>
+        <p class="l-facts-note l-reveal">
+          Judged on application of technology, presentation, business value and originality.
+          <a class="l-cite l-link" href="#ref-9">[9]</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ Teaser ============ -->
+    <section id="teaser" class="l-section">
+      <div class="l-container l-center">
+        <p class="l-eyebrow l-reveal">The Teaser</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>Watch a full table order,</span></span>
+          <span class="l-mask"><span><em>start to finish.</em></span></span>
+        </h2>
+        <p class="l-hero-sub l-narrow-sub l-reveal" style="--d: 200ms">
+          A six-turn order, a sold-out dish, the kitchen loop and a Spanish-speaking guest, in about three minutes.
+        </p>
+
+        <div class="l-player l-reveal-scale" id="player" style="--d: 150ms">
+          <video id="teaserVideo" class="l-player-video" poster="/media/lantern-teaser-poster.jpg" muted loop playsinline preload="none" aria-label="The Lantern teaser, 3 minutes 9 seconds">
+            <source src="/media/lantern-teaser-1080p.mp4" type="video/mp4" />
+          </video>
+          <button type="button" class="l-player-play" id="playerPlay" aria-label="Play Teaser">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+          </button>
+          <button type="button" class="l-player-sound" id="playerSound" aria-label="Turn Sound On" aria-pressed="false">
+            <svg class="ico-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="m22 9-6 6M16 9l6 6"/></svg>
+            <svg class="ico-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Problem ============ -->
+    <section id="problem" class="l-section l-band">
+      <div class="l-container l-center">
+        <p class="l-eyebrow l-reveal">The Problem</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>A wrong order costs</span></span>
+          <span class="l-mask"><span><em>more than one dish.</em></span></span>
+        </h2>
+        <p class="l-hero-sub l-narrow-sub l-reveal" style="--d: 150ms">Four pressures on every dinner service, and the technical gap that kept voice ordering from solving them.</p>
+      </div>
+
+      <div class="l-container">
+        <div class="l-problems">
+          <article class="l-problem l-reveal">
+            <p class="l-problem-tag"><svg class="l-ptag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7.5" r="3.2"/><path d="M3 20c0-3.6 2.7-6 6-6s6 2.4 6 6"/><path d="M16 4.6a3.2 3.2 0 0 1 0 6M18 14.4c1.8.8 3 2.8 3 5.6" class="acc"/></svg>Staffing</p>
+            <p class="l-problem-figure"><span data-count="62" data-suffix="%">62%</span></p>
+            <p class="l-problem-label">of restaurant operators call recruiting and retaining staff a significant challenge.<a class="l-cite l-link" href="#ref-1">[1]</a></p>
+            <p class="l-body">Waiters and waitresses turned over at 131% in 2025, so the floor is always training someone new.</p>
+            <figure class="l-pchart">
+              <ul class="l-pbars"><li><span class="l-pbar-name">Hosts</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 97.7%"></span></span><span class="l-pbar-val tnum">293%</span></li><li><span class="l-pbar-name">Fast food &amp; counter</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 57.7%"></span></span><span class="l-pbar-val tnum">173%</span></li><li class="is-key"><span class="l-pbar-name">Waiters &amp; waitresses</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 43.5%"></span></span><span class="l-pbar-val tnum">131%</span></li><li><span class="l-pbar-name">Restaurant cooks</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 28.5%"></span></span><span class="l-pbar-val tnum">85%</span></li><li><span class="l-pbar-name">Food service managers</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 15.2%"></span></span><span class="l-pbar-val tnum">46%</span></li></ul>
+              <figcaption>Annual turnover by role, 2025. Lightcast using BLS data, via NRA. <a class="l-cite l-link" href="#ref-1">[1]</a></figcaption>
+            </figure>
+            <p class="l-problem-answer"><span class="l-ans-head"><svg class="l-ans-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9"/></svg>The Lantern</span>A voice waiter at every table takes the whole order, so staff can serve instead of writing tickets.</p>
+          </article>
+
+          <article class="l-problem l-reveal" style="--d: 90ms">
+            <p class="l-problem-tag"><svg class="l-ptag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3z"/><path d="M9 8h6M9 11.5h4"/><path d="m10.5 15 3 3m0-3-3 3" class="acc"/></svg>Order Accuracy</p>
+            <p class="l-problem-figure">1 in <span data-count="10">10</span></p>
+            <p class="l-problem-label">drive-thru orders was still wrong in 2026.<a class="l-cite l-link" href="#ref-2">[2]</a></p>
+            <p class="l-body">Average accuracy in the 2026 Drive-Thru Study was 89.3%. Lanes running AI voice ordering reached 90.8%.</p>
+            <figure class="l-pchart">
+              <ul class="l-pbars"><li><span class="l-pbar-name">All lanes, 2025</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 86.9%"></span></span><span class="l-pbar-val tnum">86.9%</span></li><li class="is-key"><span class="l-pbar-name">All lanes, 2026</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 89.3%"></span></span><span class="l-pbar-val tnum">89.3%</span></li><li><span class="l-pbar-name">AI voice lanes, 2025</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 82.5%"></span></span><span class="l-pbar-val tnum">82.5%</span></li><li><span class="l-pbar-name">AI voice lanes, 2026</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 90.8%"></span></span><span class="l-pbar-val tnum">90.8%</span></li></ul>
+              <figcaption>Order accuracy, Intouch Insight Drive-Thru Study. <a class="l-cite l-link" href="#ref-2">[2]</a></figcaption>
+            </figure>
+            <p class="l-problem-answer"><span class="l-ans-head"><svg class="l-ans-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9"/></svg>The Lantern</span>Code checks every change against the live menu, so a dish, modifier or price can’t be invented.</p>
+          </article>
+
+          <article class="l-problem l-reveal" style="--d: 180ms">
+            <p class="l-problem-tag"><svg class="l-ptag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.1 7.5 9.5 4.4-1.4 7.5-5.1 7.5-9.5V6L12 3z"/><path d="M12 8v5" class="acc"/><circle cx="12" cy="16" r="0.6" fill="currentColor" class="acc"/></svg>Allergies</p>
+            <p class="l-problem-figure"><span data-count="33" data-suffix="%">33%</span></p>
+            <p class="l-problem-label">of restaurant servers reported receiving any food-allergy training.<a class="l-cite l-link" href="#ref-3">[3]</a></p>
+            <p class="l-body">Nearly half of fatal food-allergy reactions over 13 years were caused by food from a restaurant or other food-service establishment.</p>
+            <figure class="l-pchart">
+              <ul class="l-pbars"><li><span class="l-pbar-name">Managers</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 44.4%"></span></span><span class="l-pbar-val tnum">44.4%</span></li><li><span class="l-pbar-name">Food workers</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 40.8%"></span></span><span class="l-pbar-val tnum">40.8%</span></li><li class="is-key"><span class="l-pbar-name">Servers</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 33.3%"></span></span><span class="l-pbar-val tnum">33.3%</span></li></ul>
+              <figcaption>Staff who reported food-allergy training. CDC, 278 restaurants. <a class="l-cite l-link" href="#ref-3">[3]</a></figcaption>
+            </figure>
+            <p class="l-problem-answer"><span class="l-ans-head"><svg class="l-ans-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9"/></svg>The Lantern</span>Allergies are kept for the whole order, and a conflicting dish is refused before it reaches the kitchen.</p>
+          </article>
+
+          <article class="l-problem l-reveal" style="--d: 270ms">
+            <p class="l-problem-tag"><svg class="l-ptag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M3 11h16M11 3a12 12 0 0 1 0 16M11 3a12 12 0 0 0 0 16"/><path d="M17 17.5h4.5v3.5L19.5 20H17z" class="acc"/></svg>Languages</p>
+            <p class="l-problem-figure"><span data-count="1.52" data-decimals="2" data-suffix="B">1.52B</span></p>
+            <p class="l-problem-label">international tourist arrivals in 2025, up 4% on 2024.<a class="l-cite l-link" href="#ref-4">[4]</a></p>
+            <p class="l-body">Each is a guest who may not speak the language the menu is written in.</p>
+            <figure class="l-pchart">
+              <ul class="l-pbars"><li><span class="l-pbar-name">Europe</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 100.0%"></span></span><span class="l-pbar-val tnum">793M</span></li><li class="is-key"><span class="l-pbar-name">Asia &amp; Pacific</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 41.7%"></span></span><span class="l-pbar-val tnum">331M</span></li><li><span class="l-pbar-name">Americas</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 27.5%"></span></span><span class="l-pbar-val tnum">218M</span></li><li><span class="l-pbar-name">Africa</span><span class="l-pbar-track"><span class="l-pbar-fill" style="--w: 10.2%"></span></span><span class="l-pbar-val tnum">81M</span></li></ul>
+              <figcaption>International arrivals by region, 2025, in millions. UN Tourism. <a class="l-cite l-link" href="#ref-4">[4]</a></figcaption>
+            </figure>
+            <p class="l-problem-answer"><span class="l-ans-head"><svg class="l-ans-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9"/></svg>The Lantern</span>Guests order in their own language. Dish names and prices stay exactly as written on the menu.</p>
+          </article>
+
+          <!-- The technical gap, merged into the same grid -->
+          <article class="l-problem l-problem-wide l-reveal">
+            <div class="l-problem-gap">
+              <div>
+                <p class="l-problem-tag"><svg class="l-ptag-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v10H9l-4 4v-4H4z"/><path d="M12 8v3" class="acc"/><circle cx="12" cy="13" r="0.6" fill="currentColor" class="acc"/></svg>The Technical Gap</p>
+                <p class="l-problem-figure"><span data-count="0" data-from="12">0</span> / 12</p>
+                <p class="l-problem-label">six-turn orders completed correctly when a small local model chose its own tools.<a class="l-cite l-link" href="#ref-5">[5]</a></p>
+                <ul class="l-errors">
+                  <li><span class="l-dot-red" aria-hidden="true"></span>Told guests it added dishes it never added</li>
+                  <li><span class="l-dot-red" aria-hidden="true"></span>Removed the wrong item on a correction</li>
+                  <li><span class="l-dot-red" aria-hidden="true"></span>Cancelled the order when asked to place it</li>
+                </ul>
+              </div>
+              <div>
+                <p class="l-label">A real ordering conversation</p>
+                <ol class="l-turns">
+                  <li><span class="tnum">01</span>“What do you recommend?”</li>
+                  <li><span class="tnum">02</span>“We’ll take those two.”</li>
+                  <li><span class="tnum">03</span>“The squid, too.” <em>Sold out.</em></li>
+                  <li><span class="tnum">04</span>“Make it a seabass instead.”</li>
+                  <li><span class="tnum">05</span>“And a side, please.”</li>
+                  <li><span class="tnum">06</span>“That’s all, place the order.”</li>
+                </ol>
+                <p class="l-problem-answer"><span class="l-ans-head"><svg class="l-ans-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9"/></svg>The Lantern</span>Memory moves into SQLite and code makes every change: 10 / 10 correct with the same small model.</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Product: live feature demos ============ -->
+    <section id="product" class="l-section">
+      <div class="l-container l-center">
+        <p class="l-eyebrow l-reveal">See It Work</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>Six moments from</span></span>
+          <span class="l-mask"><span><em>a real dinner service.</em></span></span>
+        </h2>
+        <p class="l-hero-sub l-narrow-sub l-reveal" style="--d: 150ms">The app’s own screens and the waiter’s own voice, with every reply word for word from the live system. Press play with sound on.</p>
+      </div>
+
+      <div class="l-container">
+        <div class="sc" id="showcase">
+          <div class="sc-tabs-wrap l-reveal" style="--d: 150ms">
+            <div class="sc-tabs" role="tablist" aria-label="Feature demos" id="scTabs"></div>
+          </div>
+
+          <div class="sc-stage l-reveal-scale" id="scStage" style="--d: 120ms">
+            <div class="l-device sc-device">
+              <div class="l-device-screen sc-screen" id="scScreen">
+                <div class="sc-viewport" id="scViewport" aria-hidden="true">
+                  <header class="sc-app-header">
+                    <div class="header-brand">
+                      <div class="nav-brand-item">
+                        <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        <span class="nav-brand-name">The Lantern</span>
+                      </div>
+                      <span class="nav-brand-divider">×</span>
+                      <div class="nav-brand-item nav-partner">
+                        <svg class="nav-assembly-icon" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="10" width="2.5" height="4" rx="1"/><rect x="7.5" y="6" width="2.5" height="12" rx="1"/><rect x="12" y="3" width="2.5" height="18" rx="1"/><rect x="16.5" y="6" width="2.5" height="12" rx="1"/><rect x="21" y="10" width="2.5" height="4" rx="1"/></svg>
+                        <span class="nav-partner-name">AssemblyAI</span>
+                      </div>
+                    </div>
+                    <div class="segmented-control">
+                      <span class="segment-btn" aria-selected="true">
+                        <svg class="segment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3m-8 12h16M4 18a8 8 0 0 1 16 0" /><circle cx="12" cy="3" r="1" fill="currentColor" /></svg>
+                        <span>Dining</span>
+                      </span>
+                      <span class="segment-btn" aria-selected="false">
+                        <svg class="segment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="3" width="7" height="7" rx="1.5" /><rect x="14" y="14" width="7" height="7" rx="1.5" /><rect x="3" y="14" width="7" height="7" rx="1.5" /></svg>
+                        <span>Management</span>
+                      </span>
+                      <span class="segment-btn" aria-selected="false">
+                        <svg class="segment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
+                        <span>Logs</span>
+                      </span>
+                    </div>
+                    <div></div>
+                  </header>
+                  <div class="sc-app-body" id="scBody">
+                    <div class="guest-stage">
+                      <div class="orb-container">
+                        <canvas id="scOrb" class="orb-canvas" width="260" height="260"></canvas>
+                        <span class="apple-mic-btn" id="scMic">
+                          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+                        </span>
+                      </div>
+                      <div class="dialogue-stage">
+                        <div class="conversation-stream">
+                          <div class="speech-block guest-speech" id="scGuest">
+                            <div class="speech-header">
+                              <span class="speech-role">You · Table Guest</span>
+                              <span class="speech-status" id="scGuestStatus"></span>
+                            </div>
+                            <p class="speech-text guest-text" id="scGuestText"></p>
+                          </div>
+                          <div class="speech-block agent-speech" id="scAgent">
+                            <div class="speech-header">
+                              <span class="speech-role">The Lantern · Waiter &amp; Sommelier</span>
+                              <span class="speech-status" id="scAgentStatus"></span>
+                            </div>
+                            <p class="speech-text agent-text" id="scAgentText"></p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <aside class="basket-sheet" id="scBasket">
+                      <div class="basket-header">
+                        <span class="basket-title">Your Table Order</span>
+                        <span class="basket-badge">Live</span>
+                      </div>
+                      <div class="basket-items-list" id="scBasketList"></div>
+                      <div class="basket-footer">
+                        <span>Subtotal</span>
+                        <span id="scBasketTotal">$0.00</span>
+                      </div>
+                    </aside>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Staff screen: the Kitchen Display System, shown in the kitchen demo -->
+            <div class="l-device sc-staff" id="scStaff" aria-hidden="true">
+              <div class="l-device-screen">
+                <div class="sc-staff-viewport" id="scStaffViewport">
+                  <div class="ops-kds-panel">
+                    <div class="panel-header">
+                      <div class="panel-header-left">
+                        <h3 class="panel-title">Kitchen Display System (KDS)</h3>
+                      </div>
+                    </div>
+                    <div class="kds-tickets-container" id="scKds"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sc-callouts" id="scCallouts" aria-hidden="true"></div>
+
+            <button type="button" class="sc-play" id="scPlay" aria-label="Play this demo with sound">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+              <span>Play with sound</span>
+            </button>
+          </div>
+
+          <div class="sc-caption" id="scCaption" aria-live="polite">
+            <span class="sc-caption-who" id="scCaptionWho">Ready</span>
+            <span class="sc-caption-text" id="scCaptionText">Press play to hear this moment.</span>
+          </div>
+
+          <div class="sc-info">
+            <div>
+              <h3 class="sc-title" id="scTitle"></h3>
+              <p class="sc-body" id="scBodyText"></p>
+              <ol class="sc-points" id="scPoints"></ol>
+            </div>
+            <div class="sc-controls">
+              <button type="button" class="l-btn l-btn-outline sc-ctl" id="scToggle">
+                <svg class="ico-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                <svg class="ico-stop" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
+                <span id="scToggleLabel">Play</span>
+              </button>
+              <button type="button" class="l-arrow" id="scPrev" aria-label="Previous Demo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 6-6 6 6 6"/></svg>
+              </button>
+              <button type="button" class="l-arrow" id="scNext" aria-label="Next Demo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="sc-note">Voices are Kokoro-82M: the waiter uses the product’s own voices, guests use other Kokoro voices. Replies are verbatim from the live stack and from the app’s reply renderer.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ How it works + AssemblyAI ============ -->
+    <section id="how" class="l-section l-band">
+      <div class="l-container">
+        <div class="hw-head">
+          <div>
+            <p class="l-eyebrow l-reveal">How It Works</p>
+            <h2 class="l-heading-lg l-mask-heading">
+              <span class="l-mask"><span>The model interprets.</span></span>
+              <span class="l-mask"><span><em>Code decides.</em></span></span>
+            </h2>
+          </div>
+          <div class="l-reveal" style="--d: 150ms">
+            <p class="l-body-lg">One guest sentence, traced end to end. The same pipeline runs on an edge box in the restaurant or as the hosted demo; only the model and the voice change.</p>
+            <div class="segmented-control hw-profile" role="tablist" aria-label="Deployment">
+              <button type="button" class="segment-btn" role="tab" aria-selected="true" data-profile="edge">Edge, in the restaurant</button>
+              <button type="button" class="segment-btn" role="tab" aria-selected="false" data-profile="hosted">Hosted demo</button>
+            </div>
+          </div>
+        </div>
+
+        <ol class="hw-flow">
+          <li class="hw-step hw-step-aai l-reveal">
+            <span class="hw-num tnum">01</span>
+            <div class="hw-main">
+              <p class="hw-verb">Hear</p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/assemblyai.svg" alt="AssemblyAI" width="115" height="20" /></span> Universal-3.5 Pro, streaming</p>
+              <p class="l-body">16 kHz PCM over one WebSocket. Interim words appear on the table device while the guest is still speaking.</p>
+            </div>
+            <p class="hw-metric">54 menu keyterms</p>
+          </li>
+          <li class="hw-step l-reveal" style="--d: 60ms">
+            <span class="hw-num tnum">02</span>
+            <div class="hw-main">
+              <p class="hw-verb">Interpret</p>
+              <p class="hw-tech" data-variants>
+                <span data-variant="edge"><span class="hw-logo hw-logo-tile"><img src="/logos/qwen.png" alt="" width="20" height="20" /></span>Qwen3 4B <span class="hw-sep">on</span> <span class="hw-logo"><img src="/logos/ollama.png" alt="" width="14" height="20" class="hw-ollama" /></span>Ollama · JSON schema, thinking off</span>
+                <span data-variant="hosted" hidden><span class="hw-logo"><img src="/logos/gemini.svg" alt="" width="54" height="20" class="hw-gemini" /></span>3.5 Flash-Lite · JSON schema</span>
+              </p>
+              <p class="l-body">One call per turn returns an intent and a reference such as <code>offered_all</code>. The model never picks tools, writes the order or words the reply.</p>
+            </div>
+            <p class="hw-metric">~1.46k tokens, every turn</p>
+          </li>
+          <li class="hw-step l-reveal" style="--d: 120ms">
+            <span class="hw-num tnum">03</span>
+            <div class="hw-main">
+              <p class="hw-verb">Decide</p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/sqlite.svg" alt="SQLite" width="56" height="25" class="hw-sqlite" /></span>WAL mode · deterministic resolver and validator</p>
+              <p class="l-body">Resolves “those two” and “instead”, checks dishes, modifiers and allergens, and writes an immutable revision. Memory lives here, not in the prompt.</p>
+            </div>
+            <p class="hw-metric">10 / 10 six-turn orders</p>
+          </li>
+          <li class="hw-step l-reveal" style="--d: 180ms">
+            <span class="hw-num tnum">04</span>
+            <div class="hw-main">
+              <p class="hw-verb">Reply</p>
+              <p class="hw-tech">Template renderer · English and Spanish</p>
+              <p class="l-body">Names, prices and totals are read from the saved revision, so the waiter can’t misquote the menu.</p>
+            </div>
+            <p class="hw-metric">Verbatim menu</p>
+          </li>
+          <li class="hw-step l-reveal" style="--d: 240ms">
+            <span class="hw-num tnum">05</span>
+            <div class="hw-main">
+              <p class="hw-verb">Speak</p>
+              <p class="hw-tech" data-variants>
+                <span data-variant="edge"><span class="hw-logo hw-logo-tile"><img src="/logos/kokoro.png" alt="" width="20" height="20" /></span>Kokoro-82M, local · 24 kHz streamed PCM</span>
+                <span data-variant="hosted" hidden><span class="hw-logo"><img src="/logos/cartesia.svg" alt="Cartesia" width="98" height="14" class="hw-cartesia" /></span>Sonic-3 · streamed PCM</span>
+              </p>
+              <p class="l-body">A one-second spoken acknowledgement covers the wait, and the real reply queues right behind it.</p>
+            </div>
+            <p class="hw-metric" data-edge="1,752 ms to first reply audio, p50" data-hosted="Streamed as it’s generated">1,752 ms to first reply audio, p50</p>
+          </li>
+          <li class="hw-step l-reveal" style="--d: 300ms">
+            <span class="hw-num tnum">06</span>
+            <div class="hw-main">
+              <p class="hw-verb">Sync</p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/fastapi.svg" alt="FastAPI" width="86" height="20" class="hw-fastapi" /></span>WebSocket <code>/ws/ops</code> to the Kitchen Display</p>
+              <p class="l-body">Placed orders reach the kitchen; kitchen decisions carry the order’s revision and are spoken back at the table.</p>
+            </div>
+            <p class="hw-metric">50+ automated tests</p>
+          </li>
+        </ol>
+
+        <!-- AssemblyAI spotlight -->
+        <div class="aai l-reveal">
+          <div class="aai-head">
+            <img src="/logos/assemblyai.svg" alt="AssemblyAI" width="161" height="28" />
+            <h3 class="l-heading">Everything starts with what the guest said.</h3>
+            <p class="l-body">Universal-3.5 Pro streaming is tuned for a noisy dining room and a menu full of Vietnamese dish names.</p>
+          </div>
+
+          <div class="aai-turn" aria-label="Turn detection on one guest sentence">
+            <div class="aai-wave" id="aaiWave" aria-hidden="true"></div>
+            <div class="aai-turn-scale" aria-hidden="true">
+              <span class="aai-mark aai-mark-min"><b>400 ms</b>min_turn_silence</span>
+              <span class="aai-mark aai-mark-max"><b>1,000 ms</b>max_turn_silence</span>
+            </div>
+            <p class="aai-turn-caption">“We’ll take those two, please.” <span>End of turn at confidence ≥ 0.4, then the transcript is formatted.</span></p>
+          </div>
+
+          <ul class="aai-grid">
+            <li><svg class="aai-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="5" width="24" height="34" rx="2"/><path d="M14 13h14M14 19h10M14 25h12"/><path d="M27 31l6-6 8 8-6 6h-8z" class="acc"/><circle cx="31.5" cy="33" r="1.4" class="acc"/></svg><div>
+              <p class="aai-k">Keyterms prompting</p>
+              <p class="l-body">54 terms generated from the live menu, so dish names come through intact.</p>
+              <p class="aai-chips"><span>Bun Bo Hue</span><span>Stir-fried Morning Glory</span><span>Pomelo Salad with Shrimp</span><span>no fish sauce</span><span>Caramelized Pork in Clay Pot</span></p>
+              </div>
+            </li>
+            <li><svg class="aai-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 24h2M9 18v12M14 13v22M19 19v10M24 22v4"/><path d="M28 24h3" stroke-dasharray="1 3"/><circle cx="38" cy="24" r="7" class="acc"/><path d="M38 20v4l2.5 2" class="acc"/></svg><div>
+              <p class="aai-k">Tuned turn detection</p>
+              <p class="l-body">Short pauses don’t cut a guest off; a finished sentence is answered quickly.</p>
+              <p class="aai-code"><code>min_turn_silence=400</code><code>max_turn_silence=1000</code><code>end_of_turn_confidence_threshold=0.4</code><code>format_turns=True</code></p>
+              </div>
+            </li>
+            <li><svg class="aai-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9h22v14H14l-6 5v-5H5z"/><path d="M11 14h10M11 18h6"/><path d="M28 27h15v11h-4v5l-6-5h-5z" class="acc"/><path d="M33 31v3M37 31v3" class="acc"/></svg><div>
+              <p class="aai-k">Barge-in</p>
+              <p class="l-body"><code>SpeechStarted</code> cancels the reply in progress and stops playback on the device, so guests can talk over a long readback.</p>
+              </div>
+            </li>
+            <li><svg class="aai-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21l-4 4a5 5 0 0 0 7 7l4-4M31 27l4-4a5 5 0 0 0-7-7l-4 4"/><path d="M20 28l8-8"/><path d="M38 9a12 12 0 0 1 3 9M41 18l-3-1M10 39a12 12 0 0 1-3-9M7 30l3 1" class="acc"/></svg><div>
+              <p class="aai-k">Resilient connect</p>
+              <p class="l-body">A 5 s handshake timeout with an explicit retry budget. Stalled voice sessions went from 3 / 5 to 0 / 5.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Results ============ -->
+    <section id="results" class="l-section">
+      <div class="l-container l-center">
+        <p class="l-eyebrow l-reveal">Verified Benchmarks</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>Measured, not promised.</span></span>
+        </h2>
+        <p class="l-hero-sub l-narrow-sub l-reveal" style="--d: 150ms">The six-turn scenario: recommend, “those two”, a sold-out dish, “instead”, a side, “place the order”. The correct final order is 4 dishes, $36.50, placed.</p>
+      </div>
+
+      <div class="l-container">
+        <div class="l-results">
+          <article class="l-result l-reveal" data-viz>
+            <p class="l-result-title">Order Accuracy</p>
+            <p class="l-result-figure"><span data-count="100" data-suffix="%">100%</span></p>
+            <p class="l-slide-sub">Every six-turn order matched the expected basket.</p>
+            <div class="l-bars" aria-hidden="true">
+              <div class="l-bar"><span class="l-bar-val is-zero">0%</span><span class="l-bar-fill" style="--h: 0%"></span><span class="l-bar-name">V1<br />12 tool calls</span></div>
+              <div class="l-bar"><span class="l-bar-val is-zero">0%</span><span class="l-bar-fill" style="--h: 0%"></span><span class="l-bar-name">V2 before<br />DialogueState</span></div>
+              <div class="l-bar"><span class="l-bar-val">100%</span><span class="l-bar-fill is-us" style="--h: 100%"></span><span class="l-bar-name">V2 current<br />code-owned memory</span></div>
+            </div>
+            <div class="l-result-foot">
+              <p class="l-result-n tnum">10 / 10 runs · RTX 3060</p>
+              <p class="l-caption">Independent reruns: 5 / 5 on an RTX 5060 and 5 / 5 on a MacBook. <a class="l-cite l-link" href="#ref-5">[5]</a></p>
+            </div>
+          </article>
+
+          <article class="l-result l-reveal" style="--d: 120ms" data-viz>
+            <p class="l-result-title">Response Latency</p>
+            <p class="l-result-figure"><span data-count="2.6" data-decimals="1" data-suffix=" s">2.6 s</span></p>
+            <p class="l-slide-sub">Per turn, against 19 to 86 seconds for cloud voice bots.<sup class="l-dagger">†</sup></p>
+            <div class="l-hbars" aria-hidden="true">
+              <div class="l-hbar"><span class="l-hbar-name">The Lantern V2</span><span class="l-hbar-track"><span class="l-hbar-fill is-us" style="--w: 2.6%"></span></span><span class="l-hbar-val">2.6 s</span></div>
+              <div class="l-hbar"><span class="l-hbar-name">Cloud bot, best case</span><span class="l-hbar-track"><span class="l-hbar-fill is-warn" style="--w: 19%"></span></span><span class="l-hbar-val">19 s</span></div>
+              <div class="l-hbar"><span class="l-hbar-name">Cloud bot, worst case</span><span class="l-hbar-track"><span class="l-hbar-fill is-stone" style="--w: 86%"></span></span><span class="l-hbar-val">86 s</span></div>
+            </div>
+            <div class="l-result-foot">
+              <p class="l-result-n tnum">1,752 ms · first full reply audio, p50</p>
+              <p class="l-caption">Five voice sessions on synthetic 16 kHz speech. Acknowledgement clips are excluded from every figure. <a class="l-cite l-link" href="#ref-5">[5]</a></p>
+            </div>
+          </article>
+        </div>
+
+        <ul class="l-stats">
+          <li class="l-reveal"><p class="l-stat-figure tnum">1,341 ms</p><p class="l-stat-label">Model intent, p50<br /><span>down from 2,111 ms</span></p></li>
+          <li class="l-reveal" style="--d: 70ms"><p class="l-stat-figure tnum">3 / 3</p><p class="l-stat-label">Refresh recovery<br /><span>orders survive a reload mid-session</span></p></li>
+          <li class="l-reveal" style="--d: 140ms"><p class="l-stat-figure tnum">~1.46k</p><p class="l-stat-label">Tokens held flat<br /><span>turn 1 to 50 of a 4,096 window</span></p></li>
+          <li class="l-reveal" style="--d: 210ms"><p class="l-stat-figure tnum">5 / 5</p><p class="l-stat-label">Voice sessions<br /><span>through AssemblyAI, end to end</span></p></li>
+        </ul>
+
+        <!-- Comparison, dated -->
+        <div class="l-compare-head l-reveal">
+          <h3 class="l-heading">The Lantern vs existing solutions</h3>
+          <p class="l-asof">As of Sep 28, 2026</p>
+        </div>
+        <div class="l-table-wrap l-reveal">
+          <table class="l-table">
+            <thead>
+              <tr>
+                <th scope="col">Criteria</th>
+                <th scope="col">QR / Table Menu<span>e.g. Toast Mobile Order &amp; Pay <a class="l-cite l-link" href="#ref-6">[6]</a></span></th>
+                <th scope="col">Drive-Thru Voice AI<span>e.g. Presto Voice <a class="l-cite l-link" href="#ref-7">[7]</a></span></th>
+                <th scope="col">Generic Voice Agent<span>Cloud LLM</span></th>
+                <th scope="col" class="is-us">The Lantern V2<span>Edge deployment</span></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th scope="row">Guest experience</th><td>Guests browse and tap on a phone; an order can’t be edited once submitted</td><td>Built for short drive-thru orders</td><td>Natural speech; free-form replies can misquote items or prices</td><td class="is-us">Natural table conversation in the guest’s language, with instant spoken fillers</td></tr>
+              <tr><th scope="row">6-turn order accuracy</th><td>Guests enter each item</td><td>Not published for multi-turn table orders</td><td><span class="is-bad">0 / 12</span> in our V1 tool-calling build</td><td class="is-us">10 / 10 runs, 5 / 5 voice sessions</td></tr>
+              <tr><th scope="row">Response latency</th><td>N/A</td><td>3–6 s<sup class="l-dagger">†</sup></td><td><span class="is-bad">19–86 s</span><sup class="l-dagger">†</sup></td><td class="is-us">~1.7–2.6 s</td></tr>
+              <tr><th scope="row">Cloud cost / 1,000 orders</th><td>$0</td><td>$50–$100<sup class="l-dagger">†</sup></td><td>$35–$60<sup class="l-dagger">†</sup></td><td class="is-us">≈ $9, speech-to-text only<sup class="l-dagger">‡</sup></td></tr>
+              <tr><th scope="row">Audio and data</th><td>No voice data</td><td>Full audio sent to the cloud</td><td>Full audio sent to the cloud</td><td class="is-us">Model and order state stay on the edge; only speech goes to AssemblyAI</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="l-table-notes">
+          Products change; this table reflects public information on Sep 28, 2026.
+          <span><sup>†</sup> Team estimates presented in our deck, not vendor-published figures.</span>
+          <span><sup>‡</sup> AssemblyAI streaming at $0.45 per hour <a class="l-cite l-link" href="#ref-8">[8]</a>, about 75 s of open connection per six-turn order. The hosted demo also calls a cloud model and voice.</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ Pricing ============ -->
+    <section id="pricing" class="l-section l-band">
+      <div class="l-container l-center">
+        <p class="l-eyebrow l-reveal">B2B Pricing</p>
+        <h2 class="l-heading-lg l-mask-heading">
+          <span class="l-mask"><span>One setup. A simple</span></span>
+          <span class="l-mask"><span><em>price per table.</em></span></span>
+        </h2>
+        <p class="l-hero-sub l-narrow-sub l-reveal" style="--d: 150ms">For tourism dining, restaurant chains, and hotels and resorts.</p>
+      </div>
+
+      <div class="l-container">
+        <div class="pr-grid">
+          <article class="pr-card l-reveal">
+            <p class="pr-name">Edge Kit</p>
+            <p class="pr-kind">One-time setup</p>
+            <p class="pr-price">Quoted<span>per venue</span></p>
+            <ul class="pr-list">
+              <li>Edge computer for on-site inference</li>
+              <li>Table devices</li>
+              <li>Installation and menu onboarding</li>
+            </ul>
+          </article>
+          <article class="pr-card pr-card-main l-reveal" style="--d: 90ms">
+            <p class="pr-name">Table Service</p>
+            <p class="pr-kind">Monthly subscription</p>
+            <p class="pr-price">$29–$49<span>per active table / month</span></p>
+            <ul class="pr-list">
+              <li>Voice ordering at every active table</li>
+              <li>Kitchen Display and live 86’d stock</li>
+              <li>Menu updates and maintenance</li>
+              <li>Analytics</li>
+            </ul>
+            <a href="/demo" class="l-btn l-btn-primary pr-cta">Try the Live Demo</a>
+          </article>
+          <article class="pr-card l-reveal" style="--d: 180ms">
+            <p class="pr-name">Example</p>
+            <p class="pr-kind">20 active tables</p>
+            <p class="pr-price">$580–$980<span>per month, software only</span></p>
+            <ul class="pr-list">
+              <li>20 × $29–$49</li>
+              <li>Edge hardware and setup billed once</li>
+            </ul>
+          </article>
+        </div>
+        <p class="pr-note l-reveal">Proposed pricing, benchmarked against Sinqro and CUKCUK table-app pricing on Sep 28, 2026.</p>
+      </div>
+    </section>
+
+    <!-- ============ Team ============ -->
+    <section id="team" class="l-section">
+      <div class="l-container">
+        <div class="l-center l-narrow">
+          <p class="l-eyebrow l-reveal">The Team</p>
+          <h2 class="l-heading-lg l-mask-heading">
+            <span class="l-mask"><span>The people behind</span></span>
+            <span class="l-mask"><span><em>The Lantern.</em></span></span>
+          </h2>
+          <p class="l-hero-sub l-reveal" style="--d: 150ms">Five builders from Team Develarper: three AI engineers and two designers who presented the project.</p>
+        </div>
+
+        <ul class="l-team">
+          <li class="l-member l-reveal">
+            <div class="l-member-photo"><img src="/team/trong-dang-thai.jpg" alt="Portrait of Trong Dang Thai" width="460" height="580" loading="lazy" /></div>
+            <div class="l-member-meta">
+              <p class="l-member-name">Trong Dang Thai</p>
+              <p class="l-member-role">UI/UX Designer</p>
+              <p class="l-member-sub">Project Presenter</p>
+            </div>
+          </li>
+          <li class="l-member l-reveal" style="--d: 90ms">
+            <div class="l-member-photo"><img src="/team/yoshio-nomura.jpg" alt="Portrait of Yoshio Nomura" width="460" height="580" loading="lazy" /></div>
+            <div class="l-member-meta">
+              <p class="l-member-name">Yoshio Nomura</p>
+              <p class="l-member-role">AI Engineer</p>
+              <p class="l-member-sub">Logic and Reliability</p>
+              <a class="l-member-link l-link" href="https://github.com/UniverseScripts" target="_blank" rel="noopener noreferrer">@UniverseScripts</a>
+            </div>
+          </li>
+          <li class="l-member l-member-lead l-reveal" style="--d: 180ms">
+            <div class="l-member-photo"><img src="/team/long-quan-ton.jpg" alt="Portrait of Long Quan Ton" width="600" height="816" loading="lazy" /></div>
+            <div class="l-member-meta">
+              <p class="l-member-name">Long Quan Ton</p>
+              <p class="l-member-role">Project Lead &amp; AI Engineer</p>
+              <p class="l-member-sub">System Architect</p>
+              <a class="l-member-link l-link" href="https://github.com/BennedictQuanTon" target="_blank" rel="noopener noreferrer">@BennedictQuanTon</a>
+            </div>
+          </li>
+          <li class="l-member l-reveal" style="--d: 270ms">
+            <div class="l-member-photo"><img src="/team/khanh-tuong-huynh.jpg" alt="Portrait of Khanh Tuong Huynh" width="460" height="580" loading="lazy" /></div>
+            <div class="l-member-meta">
+              <p class="l-member-name">Khanh Tuong Huynh</p>
+              <p class="l-member-role">AI Engineer</p>
+              <p class="l-member-sub">Evaluation and Infrastructure</p>
+              <a class="l-member-link l-link" href="https://github.com/khanhtuongnakitomo" target="_blank" rel="noopener noreferrer">@khanhtuongnakitomo</a>
+            </div>
+          </li>
+          <li class="l-member l-reveal" style="--d: 360ms">
+            <div class="l-member-photo"><img src="/team/tuan-khoa-vi.jpg" alt="Portrait of Tuan Khoa Vi" width="460" height="580" loading="lazy" /></div>
+            <div class="l-member-meta">
+              <p class="l-member-name">Tuan Khoa Vi</p>
+              <p class="l-member-role">UI/UX Designer</p>
+              <p class="l-member-sub">Project Presenter</p>
+            </div>
+          </li>
+        </ul>
+
+        <div class="l-hack-card l-reveal">
+          <span class="l-lablab-mark l-lablab-mark-lg" role="img" aria-label="LABLAB"></span>
+          <div>
+            <p class="l-label">Certificate of Completion</p>
+            <h3 class="l-heading">AssemblyAI Voice Agent Hackathon</h3>
+            <p class="l-body">Awarded by lablab.ai, part of NativelyAI, for completing and submitting a solution during September 1 to 30, 2026.</p>
+          </div>
+          <a class="l-btn l-btn-outline" href="https://lablab.ai/event/assemblyai-voice-agent-hackathon" target="_blank" rel="noopener noreferrer">View the Event</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ Closing CTA ============ -->
+    <section class="l-section l-closing l-band" aria-labelledby="cta-heading">
+      <div class="l-container l-center">
+        <h2 id="cta-heading" class="l-hero-title l-mask-heading">
+          <span class="l-mask"><span>Good evening.</span></span>
+          <span class="l-mask"><span><em>Welcome to The Lantern.</em></span></span>
+        </h2>
+        <span class="l-rule l-rule-center" aria-hidden="true"></span>
+        <p class="l-hero-sub l-reveal" style="--d: 200ms">Tap the microphone and order the way you would with your favourite waiter.</p>
+        <div class="l-actions l-reveal" style="--d: 280ms">
+          <a href="/demo" class="l-btn l-btn-primary l-btn-lg">
+            Try the Live Demo
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a href="https://github.com/BennedictQuanTon/Team-Develarper---AssemblyAI---Voice-Agent-Hackathon" target="_blank" rel="noopener noreferrer" class="l-btn l-btn-outline l-btn-lg">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-3.16 19.49c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.89 1.53 2.34 1.09 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.6 9.6 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.68-4.57 4.93.36.31.68.92.68 1.85v2.75c0 .27.18.58.69.48A10 10 0 0 0 12 2z"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ References ============ -->
+    <section class="l-refs" aria-labelledby="refs-heading">
+      <div class="l-container">
+        <h2 id="refs-heading" class="l-refs-title">References</h2>
+        <p class="l-caption">Accessed Oct 18, 2026, unless noted.</p>
+        <ol class="l-refs-list">
+          <li id="ref-1"><span class="tnum">[1]</span><span>National Restaurant Association. <a class="l-link" href="https://go.restaurant.org/rs/078-ZLA-461/images/2026-Research-Insight_Hiring-and-Staffing.pdf" target="_blank" rel="noopener noreferrer">“Research Insight: Hiring &amp; Staffing, Key Insights &amp; Findings”</a>, April 2026. Turnover from Table 4 (Lightcast, using BLS data).</span></li>
+          <li id="ref-2"><span class="tnum">[2]</span><span>Intouch Insight. <a class="l-link" href="https://intouchinsight.com/blog/drive-thru-trends" target="_blank" rel="noopener noreferrer">“Drive-Thru Trends”, 2026 Drive-Thru Study results</a>, Oct 6, 2026.</span></li>
+          <li id="ref-3"><span class="tnum">[3]</span><span>Radke T.J., Brown L.G., Faw B., et al. <a class="l-link" href="https://www.cdc.gov/mmwr/volumes/66/wr/mm6615a2.htm" target="_blank" rel="noopener noreferrer">“Restaurant Food Allergy Practices — Six Selected Sites, United States, 2014”</a>. CDC, MMWR 66(15):404–407, Apr 21, 2017.</span></li>
+          <li id="ref-4"><span class="tnum">[4]</span><span>UN Tourism. <a class="l-link" href="https://www.untourism.int/news/international-tourist-arrivals-up-4-in-2025-reflecting-strong-travel-demand-around-the-world" target="_blank" rel="noopener noreferrer">“International tourist arrivals up 4% in 2025 reflecting strong travel demand around the world”</a>. World Tourism Barometer, January 2026.</span></li>
+          <li id="ref-5"><span class="tnum">[5]</span><span>Team Develarper. <a class="l-link" href="https://github.com/BennedictQuanTon/Team-Develarper---AssemblyAI---Voice-Agent-Hackathon#results" target="_blank" rel="noopener noreferrer">The Lantern benchmarks</a> (issues #26, #38, #39, #40), September 2026.</span></li>
+          <li id="ref-6"><span class="tnum">[6]</span><span>Toast. <a class="l-link" href="https://support.toasttab.com/en/article/Mobile-Order-and-Pay-Overview" target="_blank" rel="noopener noreferrer">“Toast Mobile Order &amp; Pay® Overview”</a> and FAQ. Accessed Sep 28, 2026.</span></li>
+          <li id="ref-7"><span class="tnum">[7]</span><span>Presto. <a class="l-link" href="https://presto.com/voice-ai/" target="_blank" rel="noopener noreferrer">“Presto Voice™”</a>. Accessed Sep 28, 2026.</span></li>
+          <li id="ref-8"><span class="tnum">[8]</span><span>AssemblyAI. <a class="l-link" href="https://www.assemblyai.com/pricing" target="_blank" rel="noopener noreferrer">“Pricing”</a>: Universal-3.5 Pro realtime streaming, $0.45 per hour.</span></li>
+          <li id="ref-9"><span class="tnum">[9]</span><span>lablab.ai. <a class="l-link" href="https://lablab.ai/event/assemblyai-voice-agent-hackathon" target="_blank" rel="noopener noreferrer">“AssemblyAI - Voice Agent Hackathon”</a>, September 1–30, 2026.</span></li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="l-footer">
+    <div class="l-container l-footer-inner">
+      <div class="l-footer-brand">
+        <img src="/favicon.svg" alt="" width="24" height="24" />
+        <span class="l-footer-name">The Lantern</span>
+        <span class="l-caption">© 2026 Team Develarper · AssemblyAI Voice Agent Hackathon</span>
+      </div>
+      <nav aria-label="Footer">
+        <ul class="l-footer-links">
+          <li><a class="l-link" href="#hackathon">Hackathon</a></li>
+          <li><a class="l-link" href="#problem">Problem</a></li>
+          <li><a class="l-link" href="#product">Product</a></li>
+          <li><a class="l-link" href="#how">How It Works</a></li>
+          <li><a class="l-link" href="#results">Results</a></li>
+          <li><a class="l-link" href="#pricing">Pricing</a></li>
+          <li><a class="l-link" href="#team">Team</a></li>
+          <li><a class="l-link l-footer-cta" href="/demo">Try the Demo</a></li>
+        </ul>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>

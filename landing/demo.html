@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="light" />
+  <title>Waking The Lantern · Live Demo</title>
+  <meta name="description" content="The Lantern's live demo is waking up. It opens by itself as soon as speech recognition, the model and the waiter's voice are warm." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@400;500&display=swap" rel="stylesheet" />
+  <script>
+    // Arriving from the landing page's transition: paint its final frame before anything else.
+    try {
+      if (sessionStorage.getItem("lantern:pt") && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        document.documentElement.classList.add("pt-arrive");
+      }
+      sessionStorage.removeItem("lantern:pt");
+    } catch (e) {}
+  </script>
+</head>
+<body class="wu-body">
+  <!-- Transition frame (shown only when arriving from the landing page) -->
+  <div class="pt" aria-hidden="true">
+    <div class="pt-wave pt-wave-ink"></div>
+    <div class="pt-wave pt-wave-stage"></div>
+    <div class="pt-center">
+      <div class="pt-orb">
+        <span class="pt-ring"></span><span class="pt-ring"></span><span class="pt-ring"></span>
+        <span class="pt-mic"><svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg></span>
+      </div>
+      <p class="pt-line">Setting the table…</p>
+    </div>
+  </div>
+
+  <header class="l-nav is-scrolled" data-stagger>
+    <nav class="l-container l-nav-inner" aria-label="Main">
+      <a href="/" class="header-brand l-link" aria-label="The Lantern × AssemblyAI, back to the landing page">
+        <span class="nav-brand-item">
+          <svg class="nav-logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M9 3h6M12 3v3M6 9h12l-2 9H8L6 9zM9 18v3h6v-3M10 9v9M14 9v9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="nav-brand-name">The Lantern</span>
+        </span>
+        <span class="nav-brand-divider" aria-hidden="true">×</span>
+        <span class="nav-brand-item nav-partner">
+          <svg class="nav-assembly-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <rect x="3" y="10" width="2.5" height="4" rx="1"/><rect x="7.5" y="6" width="2.5" height="12" rx="1"/><rect x="12" y="3" width="2.5" height="18" rx="1"/><rect x="16.5" y="6" width="2.5" height="12" rx="1"/><rect x="21" y="10" width="2.5" height="4" rx="1"/>
+          </svg>
+          <span class="nav-partner-name">AssemblyAI</span>
+        </span>
+      </a>
+      <a href="/" class="l-btn l-btn-outline l-btn-sm">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+        Back
+      </a>
+    </nav>
+  </header>
+
+  <main class="wu" id="wu" data-state="waking">
+    <section class="wu-stage l-container" aria-live="polite">
+      <div class="orb-container wu-orb" data-stagger>
+        <canvas id="wuOrb" class="orb-canvas" width="260" height="260" aria-hidden="true"></canvas>
+        <span class="apple-mic-btn wu-mic" id="wuMic" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+        </span>
+      </div>
+
+      <h1 class="wu-title" id="wuTitle" data-stagger>Setting the table…</h1>
+
+      <!-- Rolling captions: each new status rises in, the previous ones drift up and fade -->
+      <div class="wu-ticker" data-stagger aria-hidden="true">
+        <ol class="wu-ticker-track" id="wuTicker"></ol>
+      </div>
+      <p class="sr-only" id="wuStatus"></p>
+
+      <div class="wu-meter" data-stagger>
+        <div class="wu-progress" aria-hidden="true"><span id="wuBar"></span></div>
+        <p class="wu-elapsed tnum"><span id="wuElapsed">0 s</span><span class="wu-dot" aria-hidden="true">·</span><span id="wuHint">usually under a minute</span></p>
+      </div>
+
+      <!-- Steps appear only once they start -->
+      <ol class="wu-steps" id="wuSteps" aria-label="Start-up steps"></ol>
+
+      <div class="wu-actions" data-stagger>
+        <p class="wu-auto" id="wuAuto">Opens by itself the moment it’s ready.</p>
+        <a class="l-btn l-btn-primary l-btn-lg" id="wuEnter" href="#" hidden>
+          Enter The Lantern
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <button type="button" class="l-btn l-btn-outline l-btn-lg" id="wuRetry" hidden>Try Again</button>
+        <p class="wu-redirect" id="wuRedirect" hidden>Opening in <span id="wuCountdown">3</span> s · <button type="button" id="wuStay" class="wu-link">Stay here</button></p>
+      </div>
+    </section>
+
+    <footer class="wu-foot l-container" data-stagger>
+      <div class="wu-tip-wrap">
+        <span class="l-label">Try saying</span>
+        <span class="wu-tip" id="wuTip">“What would you recommend for a mild couple?”</span>
+      </div>
+      <details class="wu-log">
+        <summary><span>Start-up log</span><span class="wu-host tnum" id="wuHost"></span></summary>
+        <ol class="wu-log-lines" id="wuLog"></ol>
+      </details>
+    </footer>
+  </main>
+
+  <script type="module" src="/src/warmup.ts"></script>
+</body>
+</html>

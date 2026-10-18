@@ -1,0 +1,176 @@
+{
+  "g_recommend": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "What would you recommend for a mild couple?",
+    "seconds": 2.14
+  },
+  "w_recommend": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "I recommend Pomelo Salad with Shrimp ($6.50), Lemongrass Chicken ($9.00).",
+    "seconds": 6.34
+  },
+  "g_those_two": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "We'll take those two, please.",
+    "seconds": 1.52
+  },
+  "w_those_two": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order now includes 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken. Total: $15.50. Tell me when you'd like me to place it.",
+    "seconds": 9.58
+  },
+  "g_squid": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "I'd like the crispy squid too.",
+    "seconds": 1.65
+  },
+  "w_squid": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Crispy Squid is sold out. Would you like Grilled Seabass instead?",
+    "seconds": 3.6
+  },
+  "g_instead": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "Okay, make it a grilled seabass instead.",
+    "seconds": 2.16
+  },
+  "w_instead": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order now includes 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken, 1 Grilled Seabass. Total: $31.50. Tell me when you'd like me to place it.",
+    "seconds": 11.3
+  },
+  "g_allergy": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "I'm allergic to peanuts. One grilled seabass, please.",
+    "seconds": 3.4
+  },
+  "w_allergy": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order now includes 1 Grilled Seabass. Total: $16.00. Tell me when you'd like me to place it.",
+    "seconds": 6.29
+  },
+  "g_pomelo": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "And the pomelo salad.",
+    "seconds": 1.33
+  },
+  "w_pomelo": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Pomelo Salad with Shrimp contains peanut, which you're avoiding. Would you like something else?",
+    "seconds": 5.0
+  },
+  "g_place": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "That's all, please place the order.",
+    "seconds": 1.83
+  },
+  "w_place": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order is in: 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken, 1 Grilled Seabass, 1 Stir-fried Morning Glory. Total: $36.50. I sent it to the kitchen.",
+    "seconds": 12.58
+  },
+  "w_kitchen_accept": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "The kitchen confirmed your order.",
+    "seconds": 1.66
+  },
+  "w_kitchen_ready": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order is ready.",
+    "seconds": 1.17
+  },
+  "g_es_recommend": {
+    "speaker": "guest_es",
+    "voice": "em_alex",
+    "text": "¿Qué nos recomienda para una pareja, algo suave?",
+    "seconds": 2.64
+  },
+  "w_es_recommend": {
+    "speaker": "waiter_es",
+    "voice": "ef_dora",
+    "text": "Le recomiendo Pomelo Salad with Shrimp ($6.50), Lemongrass Chicken ($9.00).",
+    "seconds": 5.74
+  },
+  "g_es_those_two": {
+    "speaker": "guest_es",
+    "voice": "em_alex",
+    "text": "Queremos esos dos, por favor.",
+    "seconds": 2.01
+  },
+  "w_es_those_two": {
+    "speaker": "waiter_es",
+    "voice": "ef_dora",
+    "text": "Su pedido ahora incluye 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken. Total: $15.50. Avíseme cuando quiera que lo envíe.",
+    "seconds": 8.27
+  },
+  "g_es_place": {
+    "speaker": "guest_es",
+    "voice": "em_alex",
+    "text": "Eso es todo, envíe el pedido, por favor.",
+    "seconds": 2.45
+  },
+  "w_es_place": {
+    "speaker": "waiter_es",
+    "voice": "ef_dora",
+    "text": "Su pedido quedó registrado: 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken. Total: $15.50. Lo envié a la cocina.",
+    "seconds": 7.77
+  },
+  "w_side": {
+    "speaker": "waiter_en",
+    "voice": "af_heart",
+    "text": "Your order now includes 1 Pomelo Salad with Shrimp, 1 Lemongrass Chicken, 1 Grilled Seabass, 1 Stir-fried Morning Glory. Total: $36.50. Tell me when you'd like me to place it.",
+    "seconds": 13.3
+  },
+  "g_barge": {
+    "speaker": "guest_en",
+    "voice": "am_michael",
+    "text": "Sorry, one more thing.",
+    "seconds": 1.27
+  },
+  "f_recommend_en": {
+    "speaker": "filler",
+    "voice": "af_heart",
+    "text": "Let me see what's good tonight.",
+    "seconds": 1.35
+  },
+  "f_order_en": {
+    "speaker": "filler",
+    "voice": "af_heart",
+    "text": "Sure, one moment.",
+    "seconds": 0.99
+  },
+  "f_check_en": {
+    "speaker": "filler",
+    "voice": "af_heart",
+    "text": "Let me check that for you.",
+    "seconds": 1.24
+  },
+  "f_place_en": {
+    "speaker": "filler",
+    "voice": "af_heart",
+    "text": "Perfect, sending it through.",
+    "seconds": 1.44
+  },
+  "f_generic_es": {
+    "speaker": "filler",
+    "voice": "ef_dora",
+    "text": "Un momento, por favor.",
+    "seconds": 1.52
+  }
+}

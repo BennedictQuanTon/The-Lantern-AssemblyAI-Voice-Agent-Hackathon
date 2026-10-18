@@ -8,6 +8,7 @@
 
 import type { FloorData, MenuData, Table, TableStatus } from "../types/ops";
 import type { V2Order } from "../types/realtime";
+import { apiUrl, wsUrl } from "./api";
 
 export interface AgentTurnEvent {
   type: "agent_turn";
@@ -41,8 +42,7 @@ export class OpsService {
   public connect(): void {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) return;
 
-    const proto = location.protocol === "https:" ? "wss" : "ws";
-    this.ws = new WebSocket(`${proto}://${location.host}/ws/ops`);
+    this.ws = new WebSocket(wsUrl("/ws/ops"));
 
     this.ws.onopen = () => {
       if (this.onOpen) this.onOpen();
@@ -77,7 +77,7 @@ export class OpsService {
   /** Pull the floor and the menu; the dashboard renders them as one snapshot. */
   public async refresh(): Promise<void> {
     try {
-      const [floorRes, menuRes] = await Promise.all([fetch("/floor"), fetch("/menu")]);
+      const [floorRes, menuRes] = await Promise.all([fetch(apiUrl("/floor")), fetch(apiUrl("/menu"))]);
       if (!floorRes.ok || !menuRes.ok) return;
       const floorJson = (await floorRes.json()) as { tables: Table[] };
       const menu = (await menuRes.json()) as MenuData;
@@ -114,7 +114,7 @@ export class OpsService {
 
   private async post(url: string, body: unknown): Promise<Response | null> {
     try {
-      return await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      return await fetch(apiUrl(url), { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
     } catch (_) {
       return null;
     }
