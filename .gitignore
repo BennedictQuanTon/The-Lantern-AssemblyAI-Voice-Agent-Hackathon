@@ -57,3 +57,9 @@ sentence-transformers/
 *.ses
 
 # Large source design assets are kept under design/source/ when intentionally versioned.
+
+# Large video masters stay local (GitHub rejects files over 100 MB). The web cut lives in
+# landing/public/media/ and is tracked.
+/*.mp4
+/*.mov
+/*.webm

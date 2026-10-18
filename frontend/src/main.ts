@@ -19,12 +19,14 @@ import { GuestView } from "./components/guest_view";
 import { OpsView } from "./components/ops_view";
 import { LogsView } from "./components/logs_view";
 import type { BasketItem, TurnTelemetry, V2BasketLine, V2Order } from "./types/realtime";
+import { apiUrl } from "./services/api";
 
 // One device per table: /?table_id=T4. Defaults to T4 for the demo.
 const TABLE_ID = new URLSearchParams(location.search).get("table_id")?.trim() || "T4";
 
 // Prerecorded Kokoro clips (tools/generate_fillers.py) played while Qwen and Kokoro work.
-const FILLER_DIR = "/audio/fillers";
+// Static clips ship with this build, so they follow its base path (/ on Render, /app/ on Vercel).
+const FILLER_DIR = `${import.meta.env.BASE_URL}audio/fillers`;
 const FILLERS = ["recommend_en", "order_en", "check_en", "place_en", "generic_es"];
 function fillerFor(transcript: string, language: string): string {
   const said = transcript.toLowerCase();
@@ -410,7 +412,7 @@ class LanternApp {
     };
 
     this.opsView.onKitchenAction = async (orderId, action) => {
-      const order = await fetch(`/api/orders/${encodeURIComponent(orderId)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+      const order = await fetch(apiUrl(`/api/orders/${encodeURIComponent(orderId)}`)).then((r) => (r.ok ? r.json() : null)).catch(() => null);
       if (!order) return;
       const updated = await this.opsService.decide(order as V2Order, action);
       if (updated) this.opsView.upsertOrder(updated);

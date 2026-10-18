@@ -42,11 +42,13 @@ limiter = DemoRateLimiter(DemoLimits(
     writes_per_ip_per_minute=settings.demo_writes_per_ip_per_minute,
     max_transcript_chars=settings.demo_max_transcript_chars,
 ))
-# Read-only cross-origin access, so the landing page can watch /ready while a sleeping demo wakes up.
+# The landing page and the app are hosted on Vercel and call this API cross-origin: GET for /ready,
+# the menu and the floor, POST for staff actions. WebSockets connect directly and aren't subject to CORS.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[origin.strip() for origin in settings.cors_allow_origins.split(",") if origin.strip()],
-    allow_methods=["GET"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"],
 )
 
 

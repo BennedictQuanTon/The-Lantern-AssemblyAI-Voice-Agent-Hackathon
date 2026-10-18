@@ -14,17 +14,34 @@ npm run build     # outputs dist/ (index.html + demo.html)
 ## Pages
 
 - `/`: the landing page.
-- `/demo`: the wake-up page. Every "Try the Demo" button goes here. It polls the live app's
-  `GET /ready` while the Render instance boots, shows the real start-up steps (server, AssemblyAI,
-  model, voice), then opens the app at `/?table_id=T4`.
+- `/demo`: the wake-up page. Every "Try the Demo" button goes here (through the page transition).
+  It polls the backend's `GET /ready` while the Render instance boots, shows the real start-up
+  steps, then opens the app.
+- `/app/`: the app itself (`frontend/`), built into `dist/app` by `npm run build`. It calls the
+  backend at `VITE_API_URL`: REST with CORS, WebSockets directly.
 
-## Deploy
+## Deploy: site on Vercel, backend on Render
 
-- **Landing → Vercel.** Import the repo and set **Root Directory** to `landing`. Keep
-  "Include files outside the Root Directory" on (the default): the build reads `../frontend`.
-  Set `VITE_APP_URL` to the Render URL of the live app.
-- **Live app → Render.** The root `Dockerfile` + `render.yaml`. `render.yaml` turns on the public
-  demo limits and CORS for GET requests; set `CORS_ALLOW_ORIGINS` to the Vercel URL to lock it down.
+```
+Vercel (static)                          Render (Docker, render.yaml)
+  /        landing        ── GET /ready ──▶  FastAPI
+  /demo    wake-up page                      ├─ /ws/realtime  AssemblyAI → model → voice
+  /app/    the app        ── REST + WS ───▶  ├─ /ws/ops, /menu, /floor, /api/kitchen/…
+                                             └─ SQLite, demo rate limits
+```
+
+1. **Render (backend).** New → Blueprint → this repo; `render.yaml` creates the `lantern` service.
+   Fill in `GEMINI_API_KEY`, `CARTESIA_API_KEY`, `ASSEMBLYAI_API_KEY`. Note the URL
+   (e.g. `https://lantern.onrender.com`) and check `GET /ready`.
+2. **Vercel (landing + app).** Add New → Project → this repo.
+   - Root Directory: `landing`. Keep "Include files outside the Root Directory" on (the build
+     reads `../frontend`).
+   - Environment variable: `VITE_API_URL` = the Render URL from step 1.
+   - Deploy. `vercel.json` already sets the build, output and caching.
+3. **Lock CORS.** On Render set `CORS_ALLOW_ORIGINS` to the Vercel URL(s), comma-separated, and
+   redeploy.
+
+The Render image still serves its own copy of the app at its root, which is handy for debugging.
 
 ## Public demo limits (backend)
 

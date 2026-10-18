@@ -144,6 +144,15 @@ class RateLimitedEndpointTests(unittest.TestCase):
         self.assertEqual(second.status_code, 429)
         self.assertIn("Retry-After", second.headers)
 
+    def test_staff_writes_are_allowed_cross_origin(self):
+        preflight = self.client.options("/menu/set-available", headers={
+            "Origin": "https://lantern.vercel.app",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type",
+        })
+        self.assertEqual(preflight.status_code, 200)
+        self.assertIn("POST", preflight.headers.get("access-control-allow-methods", ""))
+
     def test_ready_is_readable_cross_origin(self):
         response = self.client.get("/health", headers={"Origin": "https://lantern-landing.vercel.app"})
         self.assertEqual(response.headers.get("access-control-allow-origin"), "*")

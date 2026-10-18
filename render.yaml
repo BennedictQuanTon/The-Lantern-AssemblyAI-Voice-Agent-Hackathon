@@ -36,6 +36,7 @@ services:
         value: "300"
       - key: DEMO_MAX_TURNS_PER_SESSION
         value: "30"
-      # Set to the landing page's Vercel URL to restrict who can read /ready cross-origin.
+      # The Vercel site (landing + app) calls this API cross-origin. After the first Vercel deploy,
+      # set this to its URL(s), comma-separated, e.g. https://the-lantern.vercel.app
       - key: CORS_ALLOW_ORIGINS
         value: "*"

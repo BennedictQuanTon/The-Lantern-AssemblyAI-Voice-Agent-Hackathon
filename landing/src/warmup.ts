@@ -14,9 +14,10 @@ import "./styles/warmup.css";
 import { AppleOrb } from "../../frontend/src/components/siri_orb";
 import { arrive } from "./transition";
 
-// The live app is the Docker service on Render (render.yaml); set VITE_APP_URL on Vercel.
-const APP_URL = (import.meta.env.VITE_APP_URL?.trim() || "https://lantern.onrender.com").replace(/\/$/, "");
-const ENTER_URL = `${APP_URL}/?table_id=T4`;
+// The backend is the Docker service on Render (render.yaml); set VITE_API_URL on Vercel.
+// The app itself ships with this site under /app/ and talks to that backend directly.
+const APP_URL = (import.meta.env.VITE_API_URL?.trim() || import.meta.env.VITE_APP_URL?.trim() || "https://lantern.onrender.com").replace(/\/$/, "");
+const ENTER_URL = "/app/?table_id=T4";
 const POLL_MS = 2500;
 const REQUEST_TIMEOUT_MS = 25000;
 const SLOW_AFTER_S = 75;

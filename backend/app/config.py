@@ -36,7 +36,7 @@ class Settings:
     demo_max_turns_per_session: int = int(os.getenv("DEMO_MAX_TURNS_PER_SESSION", "30"))
     demo_writes_per_ip_per_minute: int = int(os.getenv("DEMO_WRITES_PER_IP_PER_MINUTE", "30"))
     demo_max_transcript_chars: int = int(os.getenv("DEMO_MAX_TRANSCRIPT_CHARS", "280"))
-    # Origins allowed to read GET endpoints cross-origin (the landing page polls /ready while the demo wakes up).
+    # Origins allowed to call the API cross-origin: the Vercel site (landing + app). Comma-separated.
     cors_allow_origins: str = os.getenv("CORS_ALLOW_ORIGINS", "*")
     database_path: Path = Path(os.getenv("DATABASE_PATH", "var/lantern.sqlite3"))
     metrics_dir: Path = Path(os.getenv("METRICS_DIR", "var/metrics"))

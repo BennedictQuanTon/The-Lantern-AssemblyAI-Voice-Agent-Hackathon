@@ -5,7 +5,8 @@ const backend = "http://127.0.0.1:8000";
 
 export default defineConfig({
   root: resolve(__dirname, "."),
-  base: "./",
+  // "./" for FastAPI / Render; the Vercel build sets VITE_BASE=/app/ so assets resolve under /app.
+  base: process.env.VITE_BASE || "./",
   build: {
     outDir: "dist",
     emptyOutDir: true,

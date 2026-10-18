@@ -7,6 +7,7 @@
  */
 
 import type { V2ServerMessage } from "../types/realtime";
+import { wsUrl } from "./api";
 
 export class VoiceService {
   private ws: WebSocket | null = null;
@@ -36,7 +37,6 @@ export class VoiceService {
   public async connect(): Promise<void> {
     if (this.ws && this.ws.readyState === WebSocket.OPEN) return;
 
-    const proto = location.protocol === "https:" ? "wss" : "ws";
     const query = new URLSearchParams({ table_id: this.tableId });
     try {
       const saved = localStorage.getItem(this.orderKey);
@@ -44,7 +44,7 @@ export class VoiceService {
     } catch {
       // No resume without storage.
     }
-    this.ws = new WebSocket(`${proto}://${location.host}/ws/realtime?${query}`);
+    this.ws = new WebSocket(wsUrl(`/ws/realtime?${query}`));
     this.ws.binaryType = "arraybuffer";
 
     return new Promise((resolve, reject) => {
