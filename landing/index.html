@@ -478,7 +478,7 @@
             <span class="hw-num tnum">01</span>
             <div class="hw-main">
               <p class="hw-verb">Hear</p>
-              <p class="hw-tech"><img src="/logos/assemblyai.svg" alt="AssemblyAI" width="115" height="20" /> Universal-3.5 Pro, streaming</p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/assemblyai.svg" alt="AssemblyAI" width="115" height="20" /></span> Universal-3.5 Pro, streaming</p>
               <p class="l-body">16 kHz PCM over one WebSocket. Interim words appear on the table device while the guest is still speaking.</p>
             </div>
             <p class="hw-metric">54 menu keyterms</p>
@@ -487,7 +487,10 @@
             <span class="hw-num tnum">02</span>
             <div class="hw-main">
               <p class="hw-verb">Interpret</p>
-              <p class="hw-tech" data-edge="Qwen3 4B on Ollama · JSON schema, thinking off" data-hosted="Gemini 3.5 Flash-Lite · JSON schema">Qwen3 4B on Ollama · JSON schema, thinking off</p>
+              <p class="hw-tech" data-variants>
+                <span data-variant="edge"><span class="hw-logo hw-logo-tile"><img src="/logos/qwen.png" alt="" width="20" height="20" /></span>Qwen3 4B <span class="hw-sep">on</span> <span class="hw-logo"><img src="/logos/ollama.png" alt="" width="14" height="20" class="hw-ollama" /></span>Ollama · JSON schema, thinking off</span>
+                <span data-variant="hosted" hidden><span class="hw-logo"><img src="/logos/gemini.svg" alt="" width="54" height="20" class="hw-gemini" /></span>3.5 Flash-Lite · JSON schema</span>
+              </p>
               <p class="l-body">One call per turn returns an intent and a reference such as <code>offered_all</code>. The model never picks tools, writes the order or words the reply.</p>
             </div>
             <p class="hw-metric">~1.46k tokens, every turn</p>
@@ -496,7 +499,7 @@
             <span class="hw-num tnum">03</span>
             <div class="hw-main">
               <p class="hw-verb">Decide</p>
-              <p class="hw-tech">Deterministic resolver and validator · SQLite (WAL)</p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/sqlite.svg" alt="SQLite" width="56" height="25" class="hw-sqlite" /></span>WAL mode · deterministic resolver and validator</p>
               <p class="l-body">Resolves “those two” and “instead”, checks dishes, modifiers and allergens, and writes an immutable revision. Memory lives here, not in the prompt.</p>
             </div>
             <p class="hw-metric">10 / 10 six-turn orders</p>
@@ -514,7 +517,10 @@
             <span class="hw-num tnum">05</span>
             <div class="hw-main">
               <p class="hw-verb">Speak</p>
-              <p class="hw-tech" data-edge="Kokoro-82M, local · 24 kHz streamed PCM" data-hosted="Cartesia Sonic-3 · streamed PCM">Kokoro-82M, local · 24 kHz streamed PCM</p>
+              <p class="hw-tech" data-variants>
+                <span data-variant="edge"><span class="hw-logo hw-logo-tile"><img src="/logos/kokoro.png" alt="" width="20" height="20" /></span>Kokoro-82M, local · 24 kHz streamed PCM</span>
+                <span data-variant="hosted" hidden><span class="hw-logo"><img src="/logos/cartesia.svg" alt="Cartesia" width="98" height="14" class="hw-cartesia" /></span>Sonic-3 · streamed PCM</span>
+              </p>
               <p class="l-body">A one-second spoken acknowledgement covers the wait, and the real reply queues right behind it.</p>
             </div>
             <p class="hw-metric" data-edge="1,752 ms to first reply audio, p50" data-hosted="Streamed as it’s generated">1,752 ms to first reply audio, p50</p>
@@ -523,7 +529,7 @@
             <span class="hw-num tnum">06</span>
             <div class="hw-main">
               <p class="hw-verb">Sync</p>
-              <p class="hw-tech">Kitchen Display over <code>/ws/ops</code></p>
+              <p class="hw-tech"><span class="hw-logo"><img src="/logos/fastapi.svg" alt="FastAPI" width="86" height="20" class="hw-fastapi" /></span>WebSocket <code>/ws/ops</code> to the Kitchen Display</p>
               <p class="l-body">Placed orders reach the kitchen; kitchen decisions carry the order’s revision and are spoken back at the table.</p>
             </div>
             <p class="hw-metric">50+ automated tests</p>

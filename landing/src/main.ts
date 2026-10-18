@@ -8,6 +8,7 @@ import "../../frontend/src/styles/tokens.css";
 import "../../frontend/src/styles/components.css";
 import "./styles/landing.css";
 import { initShowcase } from "./showcase";
+import { initDemoLinks } from "./transition";
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = <T extends Element>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
@@ -185,10 +186,18 @@ function initPlayer(): void {
 function initProfiles(): void {
   const buttons = $$<HTMLButtonElement>(".hw-profile .segment-btn");
   const swappable = $$<HTMLElement>("[data-edge][data-hosted]");
+  const variants = $$<HTMLElement>("[data-variants]");
   for (const b of buttons) {
     b.addEventListener("click", () => {
       const profile = b.dataset.profile === "hosted" ? "hosted" : "edge";
       for (const other of buttons) other.setAttribute("aria-selected", String(other === b));
+      for (const el of variants) {
+        el.classList.add("is-swap");
+        window.setTimeout(() => {
+          for (const v of $$<HTMLElement>("[data-variant]", el)) v.hidden = v.dataset.variant !== profile;
+          el.classList.remove("is-swap");
+        }, reduceMotion ? 0 : 180);
+      }
       for (const el of swappable) {
         el.classList.add("is-swap");
         window.setTimeout(() => {
@@ -232,3 +241,4 @@ initOrb();
 initPlayer();
 initProfiles();
 initShowcase();
+initDemoLinks();

@@ -432,7 +432,18 @@ h1 em, h2 em { font-style: italic; font-weight: 400; }
 .hw-step-aai .hw-num { background: var(--color-tertiary); border-color: var(--color-tertiary); color: var(--surface-bg); }
 .hw-verb { font-family: var(--font-display); font-size: clamp(24px, 2.6vw, 32px); font-weight: 700; line-height: 1.1; letter-spacing: -0.015em; }
 .hw-tech { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin: 8px 0; font-size: 14px; font-weight: 600; color: var(--content-primary); transition: opacity 250ms; }
-.hw-tech img { height: 17px; width: auto; }
+.hw-tech > span[data-variant] { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px; transition: opacity 250ms; }
+.hw-tech > span[data-variant][hidden] { display: none; }
+.hw-tech.is-swap > span[data-variant] { opacity: 0; }
+.hw-logo { display: inline-flex; align-items: center; }
+.hw-logo img { height: 18px; width: auto; }
+.hw-logo-tile img { width: 20px; height: 20px; border-radius: 5px; box-shadow: 0 0 0 1px var(--border-subtle); }
+.hw-logo .hw-ollama { height: 20px; }
+.hw-logo .hw-sqlite { height: 24px; }
+.hw-logo .hw-gemini { height: 20px; }
+.hw-logo .hw-cartesia { height: 13px; }
+.hw-logo .hw-fastapi { height: 20px; }
+.hw-sep { font-weight: 400; color: var(--content-secondary); }
 .hw-tech.is-swap, .hw-metric.is-swap { opacity: 0; }
 .hw-main .l-body { max-width: 640px; }
 .hw-metric { justify-self: end; text-align: right; font-family: var(--font-display); font-size: 17px; font-weight: 700; line-height: 1.35; color: var(--content-primary); padding-top: 6px; transition: opacity 250ms; }
@@ -560,9 +571,11 @@ h1 em, h2 em { font-style: italic; font-weight: 400; }
 }
 
 /* ---------- Team ---------- */
-.l-team { display: grid; grid-template-columns: 1fr 1fr 1.18fr 1fr 1fr; gap: 18px; align-items: end; margin-top: clamp(48px, 6vw, 64px); }
+/* A gentle arc: the lead a touch taller in the middle, the outer two set slightly lower */
+.l-team { display: grid; grid-template-columns: 1fr 1fr 1.07fr 1fr 1fr; gap: 18px; align-items: end; margin-top: clamp(48px, 6vw, 64px); padding-bottom: 20px; }
 .l-member { position: relative; aspect-ratio: 3 / 4; overflow: hidden; background: var(--surface-card); border: 1px solid var(--border-subtle); }
-.l-member-lead { aspect-ratio: 3 / 4.15; border-color: var(--border-medium); }
+.l-member-lead { aspect-ratio: 3 / 4.08; border-color: var(--border-medium); }
+@media (min-width: 1001px) { .l-team > .l-member:first-child, .l-team > .l-member:last-child { margin-bottom: -20px; } }
 .l-member-photo { position: absolute; inset: 0; }
 .l-member-photo img { width: 100%; height: 100%; object-fit: cover; object-position: top; mix-blend-mode: multiply; transform: scale(1.1); transition: transform 1200ms var(--l-ease); }
 .l-member.is-in .l-member-photo img { transform: scale(1); }
